@@ -36,7 +36,7 @@ with container:
 # bull_table应用专用配置
 class BullTableSettings:
     # UI配置项
-    stock_types = ['Indices','Gists','Bios','Simple','Favors','Pairs','NS100','Rally','Top_SP','Pool','SP500','ETF','Stock']
+    stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
     intervals = ['1d','1mo','1wk','1h']
     filters = ['All','Foot','Fork','Leap','Potential','sput','buy','sell','scall','cmas_up','breakm','watch','maGood','<BBM','>=BBM','<bb4l','<bb6l','<bbl','<cmal', '<7', '>=7', 'DonJ', 'JonD']
     indicators = ['none','consis','both','kdj','bias']

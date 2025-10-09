@@ -34,12 +34,12 @@ class MyFavorites:
     
     indices = indices
     now_down = now_down
-    bios = bios.union(gists).union(pick_ups)
+    bios = bios #.union(gists).union(pick_ups)
     spy500stks = spy500stks
     ns100 = ns100
     top_sp = top_sp
-    gists = gists.union(now_down).union(pick_ups)
-    favors = favors.union(gists)
+    gists = gists#.union(pick_ups) #.union(now_down)
+    favors = favors#.union(gists)
 
     pairs = pairs
     pair_list = pair_list
@@ -54,8 +54,8 @@ class MyFavorites:
     pairs_4_trade = pair_list
     pairs_4_trade.reverse()
 
-    bull_sp = top_sp.union(pairs)
-    bull_pool = favors.union(pairs)
+    bull_sp = top_sp #.union(pairs)
+    bull_pool = favors #.union(pairs)
     # bull_pool = ['CRWV','DOMO'] # for testing
 
 
