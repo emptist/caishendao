@@ -12,15 +12,20 @@
     'timeZoneShortName', 'uuid', 'messageBoardId', 'gmtOffSetMilliseconds', 'trailingPegRatio'
  ]
 """
+# [yfinance readme](https://github.com/ranaroussi/yfinance?tab=readme-ov-file#logging)
+import yfinance as yf
 
-from settings import MySetts
 import warnings
+from settings import MySetts
+yf_proxy = MySetts.yf_proxy
+if yf_proxy is not None:
+    yf.set_config(proxy=yf_proxy)
+    warnings.warn(f'Proxy set to: {yf_proxy}')
+
 warnings.simplefilter(action='ignore') #, category=FutureWarning)
 import pandas as pd
 import numpy as np
 
-# [yfinance readme](https://github.com/ranaroussi/yfinance?tab=readme-ov-file#logging)
-import yfinance as yf
 import pandas_ta as ta
 from pandas_ta.overlap import rma
 from pandas_ta.utils import non_zero_range #, verify_series # verify_series is unused
@@ -29,11 +34,6 @@ remain_bars = MySetts.remain_bars
 period = MySetts.period
 interval = MySetts.interval
 hourly = MySetts.hourly
-
-yf_proxy = MySetts.yf_proxy
-if yf_proxy is not None:
-    yf.set_config(proxy=yf_proxy)
-    print(f'proxy setting to {yf_proxy} {yf.YfData}')
 
 sma_bars = [7,14,30,60,140,300,500]
 sma_names = ['sma7','sma14','sma30','sma60','sma140','sma300','sma500'] #'bbm'
