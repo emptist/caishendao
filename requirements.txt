@@ -4,5 +4,5 @@ pandas-ta
 bokeh
 streamlit
 streamlit-aggrid
-google-generativeai
+google-generativeai>=0.3.0
 requests

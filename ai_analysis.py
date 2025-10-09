@@ -126,12 +126,52 @@ def generate_local_analysis(symbol, info):
 
 @st.cache_resource
 def get_gemini_model():
-    """获取并缓存Gemini模型实例"""
+    """获取并缓存Gemini模型实例，包含模型回退机制"""
     try:
         api_key = st.secrets["GEMINI_API_KEY"]
         genai.configure(api_key=api_key)
-        return genai.GenerativeModel('gemini-1.5-flash')
+        
+        # 定义一个模型优先级列表，按照兼容性和可用性排序
+        model_candidates = [
+            'gemini-pro',            # 更通用的模型，在大多数API版本中可用
+            'gemini-1.0-pro',        # 较早的稳定版本
+            'gemini-pro-vision',     # 如果上面的都不可用，尝试这个
+        ]
+        
+        # 尝试按优先级使用模型
+        for model_name in model_candidates:
+            try:
+                return genai.GenerativeModel(model_name)
+            except Exception:
+                # 记录尝试失败的模型，但继续尝试下一个
+                pass
+                
+        # 如果所有模型都失败，获取可用模型列表以便调试
+        try:
+            available_models = genai.list_models()
+            model_names = [m.name for m in available_models if 'generateContent' in m.supported_generation_methods]
+            if model_names:
+                # 尝试使用第一个可用的支持generateContent的模型
+                return genai.GenerativeModel(model_names[0])
+        except Exception:
+            pass
+            
+        return None
     except (FileNotFoundError, KeyError):
+        return None
+    except Exception as e:
+        # 如果模型初始化失败，添加更详细的错误信息
+        error_msg = f"Failed to initialize Gemini model: {e}"
+        try:
+            # 尝试获取可用模型列表以提供更多信息
+            available_models = genai.list_models()
+            model_names = [m.name for m in available_models if 'generateContent' in m.supported_generation_methods]
+            if model_names:
+                error_msg += f"\n\n可用的模型: {', '.join(model_names)}"
+        except Exception:
+            pass
+        
+        st.error(error_msg)
         return None
 
 
