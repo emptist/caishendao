@@ -1,0 +1,8 @@
+yfinance
+vectorbt
+pandas-ta
+bokeh
+streamlit
+streamlit-aggrid
+google-generativeai
+requests
