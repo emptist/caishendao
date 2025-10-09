@@ -131,11 +131,16 @@ def get_gemini_model():
         api_key = st.secrets["GEMINI_API_KEY"]
         genai.configure(api_key=api_key)
         
-        # 定义一个模型优先级列表，按照兼容性和可用性排序
+        # 定义一个模型优先级列表，根据available_g_apis.md中显示的实际可用模型排序
+        # 优先选择较新的稳定版本和快速版本
         model_candidates = [
-            'gemini-pro',            # 更通用的模型，在大多数API版本中可用
-            'gemini-1.0-pro',        # 较早的稳定版本
-            'gemini-pro-vision',     # 如果上面的都不可用，尝试这个
+            'gemini-2.5-flash',            # 最新的快速模型，适合大多数场景
+            'gemini-2.5-pro',              # 最新的专业模型，功能更强大
+            'gemini-flash-latest',         # 最新的快速模型别名
+            'gemini-pro-latest',           # 最新的专业模型别名
+            'gemini-2.5-flash-lite',       # 轻量版快速模型，响应更快
+            'gemini-2.0-flash',            # 较稳定的快速模型
+            'gemini-2.0-pro-exp',          # 较稳定的专业模型
         ]
         
         # 尝试按优先级使用模型
