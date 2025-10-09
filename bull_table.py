@@ -278,24 +278,12 @@ def build_page():
         # Reorder the dataframe
         df = df[new_cols]
 
-        # 确保所有数值列保持浮点类型
-        # Ensure all numeric columns remain as float type
-        # Process all other columns, keeping their numeric type
-        for col in df.columns:
-            
-            # 尝试将字符串类型的数值列转换为浮点数
-            # Try to convert string-type numeric columns to float
-            if df[col].dtype == 'object':
-                try:
-                    # 尝试转换整列
-                    df[col] = pd.to_numeric(df[col], errors='ignore')
-                except:
-                    pass  # 如果转换失败则保持原样
-            
-            # 如果是浮点型，可以选择保留2位小数但保持浮点类型
-            # If it's float, optionally round to 2 decimal places while preserving float type
-            if df[col].dtype == 'float64':
-                df[col] = df[col].round(2)
+        # Optimize data type handling using pandas best practices
+        # Round float columns while preserving type
+        float_cols = df.select_dtypes(include=['float64', 'float32']).columns
+        if not float_cols.empty:
+            df[float_cols] = df[float_cols].round(2)
+        
 
         # Add the 'symbol' column to the dataframe, which is currently in the index
         df.reset_index(inplace=True)
