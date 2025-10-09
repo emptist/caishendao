@@ -760,14 +760,15 @@ class StockGroup:
                                 filtered_df.loc[symbol, col] = df[col].iloc[-1]
                             else:
                                 filtered_df.loc[symbol, col] = None
+                        filtered_df.loc[symbol, 'cnstvelo'] = df['cnst7'].iloc[-1] * df['velo7'].iloc[-1]
                 else:
                     # Set all extra columns to None if no valid data found
                     for col in extra_columns:
                         filtered_df.loc[symbol, col] = None
-            else:
-                # Set all extra columns to None if symbol not in full_dict
-                for col in extra_columns:
-                    filtered_df.loc[symbol, col] = None
+            # else:
+            #     # Set all extra columns to None if symbol not in full_dict
+            #     for col in extra_columns:
+            #         filtered_df.loc[symbol, col] = None
         
         return filtered_df
     
