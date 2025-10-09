@@ -15,7 +15,7 @@ def filter_func(symbols,interval='1d',v_limit=0.01,cr_limit=20,c_limit=40):
     #dfs, alldata = dfs_for_interval(interval,symbols,withInfo=True)
     dfs, _ = dfs_for_interval(interval,symbols,withInfo=False)
     result = []
-    for symbol in list(symbols):
+    for symbol in symbols: #list(symbols):
         # category is not bond 
         df = elevate_yf_df(dfs[symbol],interval)
         if (df is None) or len(df) < 1:
@@ -38,7 +38,7 @@ def filter_func(symbols,interval='1d',v_limit=0.01,cr_limit=20,c_limit=40):
         if v_limit is not None and v < v_limit:
             continue
         result.append(symbol)
-        print(f'{symbol} \t c: {c:.2f}% \t cr: {cr:.2f}% \t velo: {v:.2f}% \t cnst*velo: {(c*v):.2f}')
+        #print(f'{symbol} \t c: {c:.2f}% \t cr: {cr:.2f}% \t velo: {v:.2f}% \t cnst*velo: {(c*v):.2f}')
     return set(result)
 
 
@@ -62,21 +62,31 @@ def get_symbols(csv_file='etf.csv',sep='\t',encoding='utf-16'):
     #print(df['amount'].head())
     list = df[(df.amount > 5000)]['EtfSymbol'].to_list()
     #print(len(list), list)
-    return list
+    return set(list)
+
+def main():
+    known = get_symbols() 
+    result = filter_func(known,c_limit=40,cr_limit=1,v_limit=0.03)
+    print(f'indices={result}')
 
 
-known = get_symbols() 
-known = {'BITB', 'ARKB', 'SHLD', 'FBTC', 'GRNY', 'BAI', 'TQQQ', 'SPXL', 'IBIT'}
-print(f'filtered by long name: {len(known)}')
+def resarch():
+    known = get_symbols() 
+    known = {'BITB', 'ARKB', 'SHLD', 'FBTC', 'GRNY', 'BAI', 'TQQQ', 'SPXL', 'IBIT'}
+    print(f'filtered by long name: {len(known)}')
 
-result = known
-result = filter_func(known,c_limit=46,cr_limit=10,v_limit=0.09)
-print(f'filtered by consistency and velocity: {len(result)}')
-print(result,len(result))
+    result = known
+    result = filter_func(known,c_limit=46,cr_limit=10,v_limit=0.09)
+    print(f'filtered by consistency and velocity: {len(result)}')
+    print(result,len(result))
 
-#current = result
-#current = filter_func(result,cr_limit=35)
-#print(f'filtered by recent consistency and velocity: {len(current)}')
-#print(current,len(current))
+    #current = result
+    #current = filter_func(result,cr_limit=35)
+    #print(f'filtered by recent consistency and velocity: {len(current)}')
+    #print(current,len(current))
 
-# ['XLI', 'IWF', 'VUG', 'SPYG', 'IVW', 'ITA', 'VFH', 'BAI', 'SHLD', 'GRNY', 'IUSG']
+    # ['XLI', 'IWF', 'VUG', 'SPYG', 'IVW', 'ITA', 'VFH', 'BAI', 'SHLD', 'GRNY', 'IUSG']
+
+
+if __name__ == '__main__':
+    main()
