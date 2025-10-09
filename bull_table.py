@@ -278,12 +278,24 @@ def build_page():
         # Reorder the dataframe
         df = df[new_cols]
 
-        # Format all float columns to 2 decimal places without percentage symbol
-        # Iterate through all columns and check if they contain float values
+        # 确保所有数值列保持浮点类型
+        # Ensure all numeric columns remain as float type
+        # Process all other columns, keeping their numeric type
         for col in df.columns:
-            if df[col].dtype == 'float64' or (df[col].dtype == 'object' and df[col].apply(lambda x: isinstance(x, float)).any()):
-                # Format float values to 2 decimal places, keep non-float values unchanged
-                df[col] = df[col].apply(lambda x: f"{x:.2f}" if isinstance(x, float) and pd.notna(x) else x)
+            
+            # 尝试将字符串类型的数值列转换为浮点数
+            # Try to convert string-type numeric columns to float
+            if df[col].dtype == 'object':
+                try:
+                    # 尝试转换整列
+                    df[col] = pd.to_numeric(df[col], errors='ignore')
+                except:
+                    pass  # 如果转换失败则保持原样
+            
+            # 如果是浮点型，可以选择保留2位小数但保持浮点类型
+            # If it's float, optionally round to 2 decimal places while preserving float type
+            if df[col].dtype == 'float64':
+                df[col] = df[col].round(2)
 
         # Add the 'symbol' column to the dataframe, which is currently in the index
         df.reset_index(inplace=True)
