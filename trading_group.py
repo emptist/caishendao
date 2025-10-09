@@ -766,6 +766,18 @@ class StockGroup:
                     for col in extra_columns:
                         filtered_df.loc[symbol, col] = None
         
+        # Round float columns while preserving type
+        float_cols = filtered_df.select_dtypes(include=['float64', 'float32']).columns
+        if not float_cols.empty:
+            filtered_df[float_cols] = filtered_df[float_cols].round(2)  
+
+        # Format the earningsTimestamp column
+        if 'earningsTimestamp' in filtered_df.columns:
+            # Convert timestamp to datetime, coercing errors to NaT (Not a Time)
+            filtered_df['earningsTimestamp'] = pd.to_datetime(filtered_df['earningsTimestamp'], unit='s', errors='coerce')
+            # Format the datetime to a date string, leaving NaT as is
+            filtered_df['earningsTimestamp'] = filtered_df['earningsTimestamp'].dt.strftime('%Y-%m-%d')
+
         return filtered_df
     
     

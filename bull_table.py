@@ -255,13 +255,6 @@ def build_page():
         # Use the new method to get a filtered dataframe
         df = stk_group.get_filtered_info_df(symbol_list, columns=info_columns)
 
-        # Format the earningsTimestamp column
-        if 'earningsTimestamp' in df.columns:
-            # Convert timestamp to datetime, coercing errors to NaT (Not a Time)
-            df['earningsTimestamp'] = pd.to_datetime(df['earningsTimestamp'], unit='s', errors='coerce')
-            # Format the datetime to a date string, leaving NaT as is
-            df['earningsTimestamp'] = df['earningsTimestamp'].dt.strftime('%Y-%m-%d')
-
         # Move bias, cnst7, velo7, cnstvelo, trailingPE columns to the front for easier ordering
         # Get the current columns
         cols = df.columns.tolist()
@@ -277,13 +270,6 @@ def build_page():
         new_cols.extend(cols)
         # Reorder the dataframe
         df = df[new_cols]
-
-        # Optimize data type handling using pandas best practices
-        # Round float columns while preserving type
-        float_cols = df.select_dtypes(include=['float64', 'float32']).columns
-        if not float_cols.empty:
-            df[float_cols] = df[float_cols].round(2)
-        
 
         # Add the 'symbol' column to the dataframe, which is currently in the index
         df.reset_index(inplace=True)
