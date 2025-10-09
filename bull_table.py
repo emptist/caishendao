@@ -262,11 +262,11 @@ def build_page():
             # Format the datetime to a date string, leaving NaT as is
             df['earningsTimestamp'] = df['earningsTimestamp'].dt.strftime('%Y-%m-%d')
 
-        # Move bias, cnst7, velo7 columns to the front for easier ordering
+        # Move bias, cnst7, velo7, cnstvelo, trailingPE columns to the front for easier ordering
         # Get the current columns
         cols = df.columns.tolist()
         # Define the columns we want to move to the front
-        special_cols = ['bias', 'cnst7', 'velo7','trailingPE']
+        special_cols = ['bias', 'cnst7', 'velo7','cnstvelo','trailingPE']
         # Create new column order: special_cols followed by other columns
         new_cols = []
         for col in special_cols:
