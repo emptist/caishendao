@@ -148,7 +148,7 @@ def prepare_group(symbols_set, interval, pe_limit, gists=True):
         sort_by_interval=interval,
         all_intervals=[interval],
         pe_limit=pe_limit,
-        due_symbols={'^VIX'},
+        due_symbols={'AAPL'},
         gists=gists
     )
     return stk_group

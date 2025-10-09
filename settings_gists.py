@@ -25,6 +25,6 @@ gists = {
     "TQQQ",
     "SVIX",
     "UVIX",
-    "^VIX",  ###MUST
+    #"^VIX",  ###MUST
     "XBI",
 }
