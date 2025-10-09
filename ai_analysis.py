@@ -146,7 +146,8 @@ def get_gemini_model():
         # 尝试按优先级使用模型
         for model_name in model_candidates:
             try:
-                return genai.GenerativeModel(model_name)
+                model = genai.GenerativeModel(model_name)
+                return model, model_name  # 返回模型实例和模型名称
             except Exception:
                 # 记录尝试失败的模型，但继续尝试下一个
                 pass
@@ -157,13 +158,14 @@ def get_gemini_model():
             model_names = [m.name for m in available_models if 'generateContent' in m.supported_generation_methods]
             if model_names:
                 # 尝试使用第一个可用的支持generateContent的模型
-                return genai.GenerativeModel(model_names[0])
+                model = genai.GenerativeModel(model_names[0])
+                return model, model_names[0]  # 返回模型实例和模型名称
         except Exception:
             pass
             
-        return None
+        return None, None  # 返回None值对
     except (FileNotFoundError, KeyError):
-        return None
+        return None, None  # 返回None值对
     except Exception as e:
         # 如果模型初始化失败，添加更详细的错误信息
         error_msg = f"Failed to initialize Gemini model: {e}"
@@ -177,15 +179,20 @@ def get_gemini_model():
             pass
         
         st.error(error_msg)
-        return None
+        return None, None  # 返回None值对
 
 
 def get_gemini_analysis(symbol, info):
     """使用Google Gemini API进行Stock/ETF分析"""
-    model = get_gemini_model()
+    model, model_name = get_gemini_model()
     if model is None:
         error_msg = "GEMINI_API_KEY not found in st.secrets. Please add it to your secrets file.\n\n"
         return error_msg + "### Local Fallback Analysis\n" + generate_local_analysis(symbol, info)
+    
+    # 将model_name存储在session_state中供后续使用
+    if 'current_gemini_model' not in st.session_state:
+        st.session_state.current_gemini_model = {}
+    st.session_state.current_gemini_model[symbol] = model_name
 
     is_etf_flag = is_etf(info)
     # 根据资产类型构建不同的提示词
@@ -351,10 +358,15 @@ Due to AI service limitations, here are some relevant insights and suggestions:
 
 def get_gemini_response(user_question, current_analysis, current_analysis_symbol, current_analysis_info):
     """使用Google Gemini API回答用户的后续问题"""
-    model = get_gemini_model()
+    model, model_name = get_gemini_model()
     if model is None:
         error_msg = "GEMINI_API_KEY not found in st.secrets. Please add it to your secrets file.\n\n"
         return error_msg + get_local_fallback_response(user_question, current_analysis_symbol, 'en')
+    
+    # 确保model_name存储在session_state中
+    if 'current_gemini_model' not in st.session_state:
+        st.session_state.current_gemini_model = {}
+    st.session_state.current_gemini_model[current_analysis_symbol] = model_name
     
     # 构建回答用户问题的提示词
     prompt = f"You are a financial assistant. Based on the following analysis of {current_analysis_symbol} and additional information, please answer the user's question.\n\n"
@@ -521,7 +533,15 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
                 session_state.current_analysis_session_id[symbol] = analysis_session_id
         
         st.markdown("---")
-        st.markdown("### AI-Powered Analysis")
+        # 获取当前使用的模型名称并显示在标题中
+        model_info = ""
+        if ai_provider == 'gemini' and 'current_gemini_model' in st.session_state and symbol in st.session_state.current_gemini_model:
+            model_name = st.session_state.current_gemini_model[symbol]
+            model_info = f"({model_name})"
+        elif ai_provider == 'alibabacloud':
+            model_info = "(qwen-turbo)"
+            
+        st.markdown(f"### AI-Powered Analysis{model_info}")
         st.markdown(analysis)
         
         # 存储当前分析结果到会话状态
