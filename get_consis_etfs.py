@@ -66,7 +66,7 @@ def get_symbols(csv_file='etf.csv',sep='\t',encoding='utf-16'):
 
 def main():
     known = get_symbols() 
-    known = {'BITB', 'ARKB', 'SHLD', 'FBTC', 'GRNY', 'BAI', 'TQQQ', 'SPXL', 'IBIT'}
+    #known = {'BITB', 'ARKB', 'SHLD', 'FBTC', 'GRNY', 'BAI', 'TQQQ', 'SPXL', 'IBIT'}
     result = filter_func(known,c_limit=40,cr_limit=1,v_limit=0.03)
     print(f'indices={result}')
 
