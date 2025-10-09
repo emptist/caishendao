@@ -259,7 +259,7 @@ def build_page():
         # Get the current columns
         cols = df.columns.tolist()
         # Define the columns we want to move to the front
-        special_cols = ['bias', 'cnst7', 'velo7','cnstvelo','trailingPE']
+        special_cols = ['bias','cnstvelo', 'cnst7', 'velo7','trailingPE']
         # Create new column order: special_cols followed by other columns
         new_cols = []
         for col in special_cols:
@@ -276,8 +276,11 @@ def build_page():
         df.rename(columns={'index': 'symbol'}, inplace=True)
 
         # Sort by number of analyst opinions
-        if 'numberOfAnalystOpinions' in df.columns:
-            df.sort_values('numberOfAnalystOpinions', ascending=False, inplace=True, na_position='last')
+        #if 'numberOfAnalystOpinions' in df.columns:
+        #    df.sort_values('numberOfAnalystOpinions', ascending=False, inplace=True, na_position='last')
+        
+        # sort by cnstvelo
+        df.sort_values('cnstvelo', ascending=False, inplace=True, na_position='last')
 
         # Configure the grid options
         gb = GridOptionsBuilder.from_dataframe(df)
