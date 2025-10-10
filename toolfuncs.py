@@ -951,6 +951,7 @@ def set_etf_entries(df,interval,gists=True):
     '''
     df['buy'] = df.sput & ((df.open <= df.bbu)|(df.close <= df.bbu))
     df['sell'] = df.scall & ((df.open >= df.bbl)|(df.close >= df.bbl))
+    
     df['watch'] = (df.j.shift(1) < 8) & (df.j > df.j.shift(1)) & (df.sma30 > df.sma140) & (df.sma140 > df.sma140.shift(1))
     both_equal = cma_sma_equal(df,interval)
     df['hold'] = df.cmas_up & both_equal
