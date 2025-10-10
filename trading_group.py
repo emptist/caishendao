@@ -169,7 +169,7 @@ class Quote:
 
     # ==== fast since don't need df_predict ====
  
-    def increase_by_percent(self):
+    def percent_value(self):
         df = self.df #df_predict().df
         if len(df) < 2:
             return True
@@ -316,28 +316,27 @@ class StockData:
             self.quotes[interval].df_predict()
         return self.quotes
 
-    def cma_rbl(self,sma):
+    def sort_by_interval_cma_rbl(self,sma):
         return self.quotes[self.sort_by_interval].cma_rbl(sma)
     
-    def increase_by_bias(self):
-        return -self.quotes[self.sort_by_interval].bias_value()
+    def sort_by_interval_bias(self):
+        return self.quotes[self.sort_by_interval].bias_value()
     
     
-    def increase_by_kdj(self):
-        return -self.quotes[self.sort_by_interval].kdj_value()
+    def sort_by_interval_kdj(self):
+        return self.quotes[self.sort_by_interval].kdj_value()
 
-    def amount(self):
+    def sort_by_interval_cnstvelo(self):
+        return self.quotes[self.sort_by_interval].cnstvelo_value()
+
+    def sort_by_interval_amount(self):
         return self.quotes[self.sort_by_interval].amount()
 
 
-    def increase_by_percent(self):
-        return self.quotes[self.sort_by_interval].increase_by_percent()
+    def sort_by_interval_percent(self):
+        return self.quotes[self.sort_by_interval].percent_value()
 
-    def decrease_by_percent(self):
-        return -self.increase_by_percent()
 
-    def decrease_by_cnstvelo(self):
-        return -self.quotes[self.sort_by_interval].cnstvelo_value()
 
 
 
@@ -416,12 +415,12 @@ class StockGroup:
         #g.find_potential_target(detecting=detecting,srt=None,key_interval=g.all_intervals[x])
 
         def srt(e):
-            return e.decrease_by_cnstvelo()
-            #return e.increase_by_percent()
-            #return e.increase_by_kdj()
-            #return e.increase_by_bias()
-            #return e.amount() 
-            #return e.cma_rbl('sma7') # use sma30 with month data 
+            return e.sort_by_interval_cnstvelo()
+            #return e.sort_by_interval_percent()
+            #return e.sort_by_interval_kdj()
+            #return e.sort_by_interval_bias()
+            #return e.sort_by_interval_amount() 
+            #return e.sort_by_interval_cma_rbl('sma7') # use sma30 with month data 
         g.sort_potentials(srt,reverse=True)
         return g
 
@@ -460,10 +459,10 @@ class StockGroup:
         #g.find_potential_target(detecting=detecting,srt=None,key_interval=g.all_intervals[x])
 
         def srt(e):
-            #return e.increase_by_percent()
-            return e.increase_by_kdj()
-            #return e.amount() 
-            #return e.cma_rbl('sma7') # use sma30 with month data 
+            #return e.sort_by_interval_percent()
+            return e.sort_by_interval_kdj()
+            #return e.sort_by_interval_amount() 
+            #return e.sort_by_interval_cma_rbl('sma7') # use sma30 with month data 
         g.sort_potentials(srt,reverse=True)
         return g
 
@@ -486,8 +485,8 @@ class StockGroup:
             #return q.up_break() 
 
         def srt(e):
-            return e.increase_by_percent()
-            #return e.cma_rbl('sma7') # use sma30 with month data 
+            return e.sort_by_interval_percent()
+            #return e.sort_by_interval_cma_rbl('sma7') # use sma30 with month data 
 
         stk_group = cls.potential_group(
             detecting,
@@ -517,8 +516,7 @@ class StockGroup:
             def detecting(q,symbol=''):
                 return q.ma_good() 
             def srt(e):
-                return e.increase_by_percent() 
-                #return e.decrease_by_percent()
+                return e.sort_by_interval_percent() 
         """
         
         symbols = cls.include_symbols(symbols,ignoreds)
@@ -536,7 +534,7 @@ class StockGroup:
                 return q.ma_good() 
                 #return q.sput() 
             def srt(e):
-                return e.increase_by_percent() 
+                return e.sort_by_interval_percent() 
                 #return e.decrease_by_percent()
         """
 
@@ -814,6 +812,7 @@ class StockGroup:
             self.potentials = list(self.potential_dict.values())
             self.potentials.sort(reverse=reverse,key=srt)
             self.potential_symbols = [stk_dt.symbol for stk_dt in self.potentials]
+            #print(f'potentials sorted by {srt}: {self.potential_symbols}, reverse={reverse}')
         #else:
         #    print(f'no potentials found in {self.stockdata_dict.keys()}')
 

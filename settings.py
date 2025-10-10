@@ -1,5 +1,5 @@
 class MySetts:  # (USTradingTime):
-    use_proxy = not False #True # However we don't need a proxy running, I don't know why
+    use_proxy = False #True # However we don't need a proxy running, I don't know why
     yf_proxy = "http://127.0.0.1:7890" if use_proxy else None
     yfs_proxy = yf_proxy
 
