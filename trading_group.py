@@ -201,6 +201,12 @@ class Quote:
         velo = df.velo7.iloc[-1]
         #print(f'velo_value: {velo}')
         return velo
+    
+    def cnstvelo_value(self):
+        df = self.df_predict().df
+        cnstvelo = df.cnst7.iloc[-1] * df.velo7.iloc[-1]
+        #print(f'cnstvelo_value: {cnstvelo}')
+        return cnstvelo
 
     def bias_not_high(self, limit=3):
         return self.bias_value() <= limit
@@ -330,8 +336,8 @@ class StockData:
     def decrease_by_percent(self):
         return -self.increase_by_percent()
 
-    def decrease_by_velo(self):
-        return -self.quotes[self.sort_by_interval].velo_value()
+    def decrease_by_cnstvelo(self):
+        return -self.quotes[self.sort_by_interval].cnstvelo_value()
 
 
 
@@ -410,7 +416,7 @@ class StockGroup:
         #g.find_potential_target(detecting=detecting,srt=None,key_interval=g.all_intervals[x])
 
         def srt(e):
-            return e.decrease_by_velo()
+            return e.decrease_by_cnstvelo()
             #return e.increase_by_percent()
             #return e.increase_by_kdj()
             #return e.increase_by_bias()

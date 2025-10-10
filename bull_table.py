@@ -249,7 +249,6 @@ def build_page():
         'totalDebt',
     ]
 
-    # --- AG Grid Table Implementation ---
     group_info = stk_group.info
     if group_info and symbol_list:
         # Use the new method to get a filtered dataframe
@@ -282,27 +281,30 @@ def build_page():
         # sort by cnstvelo
         df.sort_values('cnstvelo', ascending=False, inplace=True, na_position='last')
 
+        # --- AG Grid Table Implementation ---
+
         # Configure the grid options
         gb = GridOptionsBuilder.from_dataframe(df)
         gb.configure_selection(
             'single',
             use_checkbox=False,
-            pre_selected_rows=[i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
+            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
         )
         # Configure default columns with width constraints
         gb.configure_default_column(
+            maxWidth=60,  # Limit maximum column width to 200px
+            minWidth=40,   # Set minimum column width to 40px
+            width=55,       # Default column width of 55px
             sortable=True, 
             resizable=True, 
             filterable=True,
-            maxWidth=200,  # Limit maximum column width to 200px
-            minWidth=40,   # Set minimum column width to 40px
-            width=55       # Default column width of 55px
+            domLayout=['autoHeight','autoSize'],
         )
 
         gridOptions = gb.build()
 
         # Manually add grid options for auto-sizing and auto-height
-        gridOptions['domLayout'] = 'autoHeight'
+        # gridOptions['domLayout'] = 'autoHeight'
         # Removed autoSizeStrategy to use fixed widths for better control
         # gridOptions['autoSizeStrategy'] = {'type': 'fitCellContents'}
 
