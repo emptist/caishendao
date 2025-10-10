@@ -6,3 +6,4 @@ streamlit
 streamlit-aggrid
 google-generativeai>=0.3.0
 requests
+watchdog
