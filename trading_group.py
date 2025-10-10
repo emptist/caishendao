@@ -177,6 +177,10 @@ class Quote:
         p = (df.close.iloc[-1]/df.close.iloc[-2]-1)*100
         return round(p, 2)
 
+    def high_cnstvelo(self,limit=4):
+        v = self.cnstvelo_value() 
+        result = v >= limit
+        return result
 
 
     def high_cnst(self,limit=40):
@@ -396,12 +400,13 @@ class StockGroup:
         
         g.recollect_dicts()
         
-        def detecting(q,symbol=''):
+        def detecting(q:Quote,symbol=''):
             bias_limit = 15 #3
             bull_starts = q.bias_not_high(bias_limit) and q.key_macma_up() # and q.j_not_high(j=97,d=95) 
-            hc_limit = 38
-            hv_limit = 0.04
-            bull_starts = bull_starts and q.high_cnst(limit=hc_limit) and q.high_velo(limit=hv_limit)
+            # hc_limit = 38
+            # hv_limit = 0.04
+            # bull_starts = bull_starts and q.high_cnst(limit=hc_limit) and q.high_velo(limit=hv_limit)
+            bull_starts = bull_starts and q.high_cnstvelo()
             return bull_starts
         
         g.find_potential_target(detecting=detecting,srt=None,gists=gists)
@@ -414,7 +419,7 @@ class StockGroup:
         #x = -2
         #g.find_potential_target(detecting=detecting,srt=None,key_interval=g.all_intervals[x])
 
-        def srt(e):
+        def srt(e:StockData):
             return e.sort_by_interval_cnstvelo()
             #return e.sort_by_interval_percent()
             #return e.sort_by_interval_kdj()
