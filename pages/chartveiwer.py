@@ -105,7 +105,8 @@ times_incr = close_end/close_start
 bars = len(df)
 velocity = 100 * (times_incr**(1/bars)) - 100
 velo = round(df.velo7.iloc[-1],2)
-cnstvelo = round(velo * df.cnst7.iloc[-1],2)
+cnstvelo = round(df.cnsvel7.iloc[-1],2)
+
 st.write(f'**{selected_stock} data from {len(df)} bars, {close_start} -> {close_end}, price velocity: {velocity:.2f}%, velo: {velo:.2f}%, cnst*velo: {cnstvelo:.2f}**')
 
 st_ai_analysis_area(selected_stock,info,ai_provider, session_state=st.session_state)

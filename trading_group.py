@@ -208,7 +208,7 @@ class Quote:
     
     def cnstvelo_value(self):
         df = self.df_predict().df
-        cnstvelo = df.cnst7.iloc[-1] * df.velo7.iloc[-1]
+        cnstvelo = df.cnsvel7.iloc[-1] 
         #print(f'cnstvelo_value: {cnstvelo}')
         return cnstvelo
 
@@ -769,7 +769,7 @@ class StockGroup:
                                 filtered_df.loc[symbol, col] = df[col].iloc[-1]
                             else:
                                 filtered_df.loc[symbol, col] = None
-                        filtered_df.loc[symbol, 'cnstvelo'] = df['cnst7'].iloc[-1] * df['velo7'].iloc[-1]
+                        filtered_df.loc[symbol, 'cnstvelo'] = df['cnsvel7'].iloc[-1]
                 else:
                     # Set all extra columns to None if no valid data found
                     for col in extra_columns:

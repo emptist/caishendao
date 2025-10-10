@@ -102,7 +102,7 @@ def bokeh_draw(
     cnst = round(df.cnst7.iloc[-1], 2) if ('cnst7' in df.columns) else -1
     cnsvel = round(df.cnsvel7.iloc[-1], 2) if ('cnsvel7' in df.columns) else -1
     velo = round(df.velo7.iloc[-1], 2) if ('velo7' in df.columns) else -1
-    cnstvelo = round(cnst*velo, 2)
+    cnstvelo = cnsvel
 
     j = round(df.j.iloc[-1], 2)
     d = round(df.d.iloc[-1], 2)
