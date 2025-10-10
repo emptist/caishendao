@@ -300,13 +300,14 @@ def build_page():
             sortable=True, 
             resizable=True, 
             filterable=True,
-            domLayout=['autoHeight','autoSize'],
+            #domLayout=['autoHeight','autoSize'],
         )
 
         gridOptions = gb.build()
 
         # Manually add grid options for auto-sizing and auto-height
-        # gridOptions['domLayout'] = 'autoHeight'
+        gridOptions['domLayout'] = 'autoHeight'
+        
         # Removed autoSizeStrategy to use fixed widths for better control
         # gridOptions['autoSizeStrategy'] = {'type': 'fitCellContents'}
 
