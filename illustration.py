@@ -100,7 +100,7 @@ def bokeh_draw(
         print(f'DEBUG BIAS: missing in {symbol} {interval}')
 
     cnst = round(df.cnst7.iloc[-1], 2) if ('cnst7' in df.columns) else -1
-    cnstr = round(df.cnst7r.iloc[-1], 2) if ('cnst7r' in df.columns) else -1
+    cnsvel = round(df.cnsvel7.iloc[-1], 2) if ('cnsvel7' in df.columns) else -1
     velo = round(df.velo7.iloc[-1], 2) if ('velo7' in df.columns) else -1
     cnstvelo = round(cnst*velo, 2)
 
@@ -304,7 +304,7 @@ def bokeh_draw(
         if in_y2 in ["both","consis"]:
             for iname in [
                 "cnst7", 
-                "cnst7r",
+                "cnsvel7",
             ]:
                 if iname in df.columns:
                     p.line(
@@ -420,7 +420,7 @@ def bokeh_draw(
             ("date", "@date{%F}"),
             ("close", "@close"),
             ("cnst", "@cnst7"),
-            ("cnstr", "@cnst7r"),
+            ("cnsvel", "@cnsvel7"),
             ("velo", "@velo7"),
             ("lcmah", "@lcmah"),
             ("cmah", "@cmah"),

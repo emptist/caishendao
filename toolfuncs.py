@@ -383,9 +383,10 @@ def extra_calcs(data,sma_name,interval):
             # Define the window size for consistency calculation
             cnst_window = 280 #28
             # Calculate the rolling consistency in a single, efficient operation
-            data[f'cnst{label}r'] = 100 * (data[f'hrows{label}'] == 0).rolling(
-                window=cnst_window, min_periods=1
-            ).mean()
+            # data[f'cnst{label}r'] = 100 * (data[f'hrows{label}'] == 0).rolling(
+            #     window=cnst_window, min_periods=1
+            # ).mean()
+            data[f'cnsvel{label}'] = data[f'cnst{label}']*data[f'velo{label}']
 
     return data
 

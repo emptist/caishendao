@@ -11,7 +11,7 @@
 import pandas as pd
 from toolfuncs import elevate_yf_df, dfs_for_interval
 
-def filter_func(symbols,interval='1d',v_limit=0.01,cr_limit=20,c_limit=40):  
+def filter_func(symbols,interval='1d',v_limit=0.01,csvl_limit=3,c_limit=40):  
     #dfs, alldata = dfs_for_interval(interval,symbols,withInfo=True)
     dfs, _ = dfs_for_interval(interval,symbols,withInfo=False)
     result = []
@@ -23,22 +23,22 @@ def filter_func(symbols,interval='1d',v_limit=0.01,cr_limit=20,c_limit=40):
 
         v = df.velo7.iloc[-1]
         c = df.cnst7.iloc[-1]
-        cr = df.cnst7r.iloc[-1]
+        csvl = df.cnsvel7.iloc[-1]
 
         #if symbol in ['GLD','SLV','GDX','GDXU']:
-        #    print(f'{symbol} is gold or silver, cr: {round(cr,2)} c: {round(c,2)} velo: {round(v,2)}')
+        #    print(f'{symbol} is gold or silver, csvl: {round(csvl,2)} c: {round(c,2)} velo: {round(v,2)}')
         if df.close.iloc[-1] < df.close.iloc[-min(8,len(df))]:
             continue
         if df.close.iloc[-1] < df.close.iloc[-min(140,len(df))]:
             continue
-        if cr_limit is not None and cr < cr_limit:
+        if csvl_limit is not None and csvl < csvl_limit:
             continue
         if c_limit is not None and c < c_limit:
             continue
         if v_limit is not None and v < v_limit:
             continue
         result.append(symbol)
-        #print(f'{symbol} \t c: {c:.2f}% \t cr: {cr:.2f}% \t velo: {v:.2f}% \t cnst*velo: {(c*v):.2f}')
+        #print(f'{symbol} \t c: {c:.2f}% \t csvl: {csvl:.2f}% \t velo: {v:.2f}% \t cnst*velo: {(c*v):.2f}')
     return set(result)
 
 
@@ -67,7 +67,7 @@ def get_symbols(csv_file='etf.csv',sep='\t',encoding='utf-16'):
 def main():
     known = get_symbols() 
     #known = {'BITB', 'ARKB', 'SHLD', 'FBTC', 'GRNY', 'BAI', 'TQQQ', 'SPXL', 'IBIT'}
-    result = filter_func(known,c_limit=40,cr_limit=1,v_limit=0.03)
+    result = filter_func(known,c_limit=40,csvl_limit=3,v_limit=0.03)
     print(f'indices={result}')
 
 
@@ -77,12 +77,12 @@ def resarch():
     print(f'filtered by long name: {len(known)}')
 
     result = known
-    result = filter_func(known,c_limit=46,cr_limit=10,v_limit=0.09)
+    result = filter_func(known,c_limit=46,csvl_limit=30,v_limit=0.09)
     print(f'filtered by consistency and velocity: {len(result)}')
     print(result,len(result))
 
     #current = result
-    #current = filter_func(result,cr_limit=35)
+    #current = filter_func(result,csvl_limit=35)
     #print(f'filtered by recent consistency and velocity: {len(current)}')
     #print(current,len(current))
 
