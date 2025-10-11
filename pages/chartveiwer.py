@@ -29,7 +29,7 @@ intervals = ['1d', '1mo', '1wk', '1h', '3mo', '30m', '15m', '1m', '2m', '5m', '6
 col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 with col1:
-    selected_width = st.number_input('Width', value=1100) #=2500 if selected_whole_view else 1200)
+    selected_width = st.number_input('Width', value=1150) #=2500 if selected_whole_view else 1200)
 with col2:
     selected_height = st.number_input('Height', value=500) #400 if selected_stock in ['SPY','QQQ'] else 500)
 with col3:
@@ -92,7 +92,7 @@ def plot_raw_data(df,interval,whole_view):
             symbol_info= longName
         )
         from bokeh.embed import file_html
-        components.html(file_html(p, 'cdn', ), width=selected_width,height=height)    
+        components.html(file_html(p, 'cdn', ), width=None,height=height)    
         #st.bokeh_chart(p,use_container_width=True)
         set_page_background_color(df)
 

@@ -43,7 +43,7 @@ class BullTableSettings:
     display_lengths = [150,300,600,1200,2400,4800,9600]
     
     # 默认配置
-    default_width = 1100
+    default_width = 1150
     default_height = 500
     default_d_ceiling = 105
     default_pe_limit = 30
@@ -61,7 +61,7 @@ class StQuote(Quote):
         p = draw(symbol,df,just_data=True,whole_view=whole_view,\
             in_y2=in_y2,width=width,height=height,interval=self.interval,symbol_info=symbol_info)
         
-        components.html(file_html(p, 'cdn',), width=width,height=height)    
+        components.html(file_html(p, 'cdn',), width=None,height=height)    
         #st.bokeh_chart(p,use_container_width=True)
         set_page_background_color(df)
 
