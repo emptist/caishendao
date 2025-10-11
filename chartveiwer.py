@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
+from bokeh.embed import file_html
 from illustration import bokeh_draw as draw
 from settings import MySetts
 from toolfuncs import get_any_df
@@ -86,12 +87,11 @@ def plot_raw_data(df,interval,whole_view):
             just_data=True,
             whole_view=whole_view,
             in_y2=selected_y2,
-            width=width - 30,
+            width=width,
             height=height,
             interval=interval,
             symbol_info= longName
         )
-        from bokeh.embed import file_html
         components.html(file_html(p, 'cdn', ), width=None,height=height)    
         #st.bokeh_chart(p,use_container_width=True)
         set_page_background_color(df)

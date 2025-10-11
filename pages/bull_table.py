@@ -346,7 +346,7 @@ def build_page():
         q = stk_group.full_dict[symbol].quotes[interval]
         q.plot_raw_data(
             symbol, selected_whole_view, selected_y2,
-            width=selected_width - 30,
+            width=selected_width,
             length=selected_length,
             height=selected_height // len_all_intervals - 10,
             symbol_info=symbol_info
