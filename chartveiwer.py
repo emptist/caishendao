@@ -27,26 +27,26 @@ st.sidebar.header('View Chart')
 #START = '2015-01-01'
 #TODAY = date.today().strftime('%Y-%m-%d')
 intervals = ['1d', '1mo', '1wk', '1h', '3mo', '30m', '15m', '1m', '2m', '5m', '60m', '5d', ] #, '90m'
-col2, col3, col4, col5, col6, col7 = st.columns(6)
+col1, col2, col3, col4, col5, col6= st.columns(6)
 
 # with col1:
 #     selected_width = st.number_input('Width', value=1150) #=2500 if selected_whole_view else 1200)
 with col2:
     selected_height = st.number_input('Height', value=500) #400 if selected_stock in ['SPY','QQQ'] else 500)
-with col3:
+with col5:
     selected_y2 = st.selectbox('Indicator',['none','consis','kdj','both','bias',]) # 'bbbp',
     selected_whole_view = selected_y2 == 'none' 
-with col4:
+with col3:
     interval = st.selectbox('Interval', intervals)
-with col5:
+with col4:
     # Any length will be acceptable, since df[-length] will make it right
     #selected_length = st.number_input('Chart Bars', value=300)
     #selected_stock = st.selectbox('Symbol', get_symbols())
     selected_length = st.selectbox('Chart Bars',[150,300,600,1200,2400,4800,9600,])#st.number_input('Chart Bars', value=1000) #9000 if selected_whole_view else 900)
-with col6:
+with col1:
     # Add AI Provider selection
     ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])
-with col7:
+with col6:
     selected_stock = st.text_input('Symbol','SHLD').upper()
 
 @st.cache_data  

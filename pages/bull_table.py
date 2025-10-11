@@ -188,22 +188,22 @@ def build_page():
     """
 
     # --- Controls ---
-    col0, col1, col3, col4, col5, col6, col7, col8, col9 = st.columns(9)
-    with col0:
+    col1, col2, col3, col4, col5, col6, col7, col8, col9 = st.columns(9)
+    with col2:
         selected_type = st.selectbox('Type', BullTableSettings.stock_types)
-    with col1:
+    with col5:
         selected_interval = st.selectbox('Interval', BullTableSettings.intervals)
-    with col3:
+    with col1:
         # Add AI Provider selection
         ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])
-    with col4:
+    with col3:
         selected_height = st.number_input('Height', value=BullTableSettings.default_height)
-    with col5:
+    with col4:
         d_ceiling = st.number_input('d <=', value=BullTableSettings.default_d_ceiling)
-    with col6:
+    with col7:
         selected_y2 = st.selectbox('Indicator', BullTableSettings.indicators)
         selected_whole_view = selected_y2 == 'none'
-    with col7:
+    with col6:
         # Any length will be acceptable, since df[-length] will make it right
         selected_length = st.selectbox('Chart Bars', BullTableSettings.display_lengths)
     with col8:
