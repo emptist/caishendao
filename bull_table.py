@@ -368,7 +368,7 @@ if os.path.exists(local_file_path):
     try:
         with open(local_file_path, 'rb') as audio_file:
             data = audio_file.read()
-        st.audio(data,format='audio/mp3',autoplay=True)
+        st.audio(data,format='audio/mpeg',autoplay=True,loop=True)
     except Exception as e:
         st.warning(f"Can't play audio: {e}")
 else:
