@@ -360,8 +360,9 @@ def build_page():
     
 build_page()
 
-local_file_path = './dizang.mp3'  # Ensure the file is in the same directory as your script
 
+import os
+local_file_path = './dizang.mp3'  # Ensure the file is in the same directory as your script
 # Read the local audio file with error handling
 if os.path.exists(local_file_path):
     try:

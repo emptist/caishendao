@@ -144,10 +144,10 @@ if st.session_state.get('show_info', False):
 st.write(df.tail())
 #st.write(df.columns.sort_values())
 
+
 # Audio playback functionality has been removed for security reasons
-
+import os
 local_file_path = './dizang.mp3'  # Ensure the file is in the same directory as your script
-
 # Read the local audio file with error handling
 if os.path.exists(local_file_path):
     try:
