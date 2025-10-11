@@ -37,6 +37,7 @@ def bokeh_draw(
     just_data=False,
     whole_view=False,
     in_y2="kdj",
+    width=None,  # for back compatibility, not used in current version
     height=500,
     interval=None,
     symbol_info=None,
