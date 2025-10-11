@@ -43,7 +43,7 @@ class BullTableSettings:
     display_lengths = [150,300,600,1200,2400,4800,9600]
     
     # 默认配置
-    default_width = 1350
+    default_width = 1100
     default_height = 500
     default_d_ceiling = 105
     default_pe_limit = 30

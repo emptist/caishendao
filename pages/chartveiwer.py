@@ -29,7 +29,7 @@ intervals = ['1d', '1mo', '1wk', '1h', '3mo', '30m', '15m', '1m', '2m', '5m', '6
 col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 with col1:
-    selected_width = st.number_input('Width', value=1350) #=2500 if selected_whole_view else 1200)
+    selected_width = st.number_input('Width', value=1100) #=2500 if selected_whole_view else 1200)
 with col2:
     selected_height = st.number_input('Height', value=500) #400 if selected_stock in ['SPY','QQQ'] else 500)
 with col3:
