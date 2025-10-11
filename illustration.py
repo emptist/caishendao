@@ -37,7 +37,6 @@ def bokeh_draw(
     just_data=False,
     whole_view=False,
     in_y2="kdj",
-    width=800,
     height=500,
     interval=None,
     symbol_info=None,
@@ -110,8 +109,7 @@ def bokeh_draw(
         y1_range = Range1d(start=lo * 0.95, end=hi * 1.05)
         p = figure(
             tools=TOOLS,
-            sizing_mode="scale_width",
-            width=width - 30,
+            sizing_mode="stretch_width",
             height=height,
             y_range=y1_range,
             output_backend="webgl",
@@ -124,8 +122,7 @@ def bokeh_draw(
         y2_range = Range1d(start=-60, end=500)
         p = figure(
             tools=TOOLS,
-            sizing_mode="scale_width",
-            width=width - 30,
+            sizing_mode="stretch_width",
             height=height,
             y_range=y1_range,
             output_backend="webgl",
