@@ -293,18 +293,8 @@ def build_page():
         if screen_height is None:
             screen_height = 800  # A reasonable default
 
-        # Calculate dynamic height for the grid
-        row_height = 35  # Approximate height of a single row in pixels
-        header_height = 40  # Approximate height of the header row in pixels
-
-        # Calculate the height required to display all rows
-        full_grid_height = header_height + (len(df) * row_height)
-
-        # Calculate 20% of the screen height as the maximum height
-        max_grid_height = screen_height * 0.2
-
-        # Use the smaller of the two values
-        grid_height = min(full_grid_height, max_grid_height)
+        # Calculate x% of the screen height as the maximum height
+        grid_height = screen_height * 0.2
 
         # Configure the grid options
         gb = GridOptionsBuilder.from_dataframe(df)
