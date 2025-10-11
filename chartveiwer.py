@@ -40,9 +40,9 @@ with col4:
     interval = st.selectbox('Interval', intervals)
 with col5:
     # Any length will be acceptable, since df[-length] will make it right
-    #selected_length = st.number_input('Bars to Display', value=300)
+    #selected_length = st.number_input('Chart Bars', value=300)
     #selected_stock = st.selectbox('Symbol', get_symbols())
-    selected_length = st.selectbox('Bars to Display',[150,300,600,1200,2400,4800,9600,])#st.number_input('Bars to Display', value=1000) #9000 if selected_whole_view else 900)
+    selected_length = st.selectbox('Chart Bars',[150,300,600,1200,2400,4800,9600,])#st.number_input('Chart Bars', value=1000) #9000 if selected_whole_view else 900)
 with col6:
     # Add AI Provider selection
     ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])

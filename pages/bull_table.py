@@ -204,7 +204,7 @@ def build_page():
         selected_whole_view = selected_y2 == 'none'
     with col7:
         # Any length will be acceptable, since df[-length] will make it right
-        selected_length = st.selectbox('Bars to Display', BullTableSettings.display_lengths)
+        selected_length = st.selectbox('Chart Bars', BullTableSettings.display_lengths)
     with col8:
         selected_filter = st.selectbox('Filter', BullTableSettings.filters)
     with col9:
