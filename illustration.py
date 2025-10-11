@@ -418,7 +418,7 @@ def bokeh_draw(
 
     hover = HoverTool(
         tooltips=[
-            ("date", "@date{%F}"),
+            ("date", "@date{%Y-%m-%d %H:%M:%S}"),
             ("close", "@close"),
             ("cnst", "@cnst7"),
             ("cnsvel", "@cnsvel7"),
