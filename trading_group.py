@@ -181,7 +181,7 @@ class Quote:
         v = self.cnstvelo_value()
         match self.interval:
             case '1h':
-                limit = limit/10
+                limit = limit/20
             case '1d':
                 limit = limit
             case '1w':
@@ -195,6 +195,11 @@ class Quote:
         result = v >= limit
         return result
 
+    def cnstvelo_value(self):
+        df = self.df_predict().df
+        cnstvelo = df.cnsvel7.iloc[-1] 
+        #print(f'cnstvelo_value: {cnstvelo}')
+        return cnstvelo
 
     def high_cnst(self,limit=40):
         v = self.cnst_value() 
@@ -212,7 +217,7 @@ class Quote:
         v = self.velo_value() 
         match self.interval:
             case '1h':
-                limit = limit/10
+                limit = limit/20
             case '1d':
                 limit = limit
             case '1w':
@@ -232,11 +237,6 @@ class Quote:
         #print(f'velo_value: {velo}')
         return velo
     
-    def cnstvelo_value(self):
-        df = self.df_predict().df
-        cnstvelo = df.cnsvel7.iloc[-1] 
-        #print(f'cnstvelo_value: {cnstvelo}')
-        return cnstvelo
 
     def bias_not_high(self, limit=3):
         return self.bias_value() <= limit
