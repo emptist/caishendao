@@ -110,6 +110,7 @@ def bokeh_draw(
         y1_range = Range1d(start=lo * 0.95, end=hi * 1.05)
         p = figure(
             tools=TOOLS,
+            sizing_mode="scale_width",
             width=width - 30,
             height=height,
             y_range=y1_range,
@@ -123,6 +124,7 @@ def bokeh_draw(
         y2_range = Range1d(start=-60, end=500)
         p = figure(
             tools=TOOLS,
+            sizing_mode="scale_width",
             width=width - 30,
             height=height,
             y_range=y1_range,
