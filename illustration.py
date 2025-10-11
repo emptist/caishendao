@@ -150,7 +150,8 @@ def bokeh_draw(
     #        p.add_layout(box)
 
     # if df[ma_ready].iloc[-1]:
-    if df[ma_ready].iloc[-1] & df["cmas_up"].iloc[-1]:
+    last_ma_bullish = df[ma_ready].iloc[-1] & df["cmas_up"].iloc[-1]
+    if last_ma_bullish:
         # if df.sput.iloc[-1]:
         p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
         p.background_fill_alpha = 0.2
@@ -159,10 +160,11 @@ def bokeh_draw(
     dec = df.open >= df.close
     # try:
     if False: #interval in ["1h", "1d", "1wk", "1mo"]:
-        inc1 = inc & df[ma_ready] & df["cmas_up"]
-        inc2 = inc & ~(df[ma_ready] & df["cmas_up"])
-        dec1 = dec & df[ma_ready] & df["cmas_up"]
-        dec2 = dec & ~(df[ma_ready] & df["cmas_up"])
+        ma_bullish = df[ma_ready] & df["cmas_up"]
+        inc1 = inc & ma_bullish
+        inc2 = inc & ~ma_bullish
+        dec1 = dec & ma_bullish
+        dec2 = dec & ~ma_bullish
     else:
         inc1 = inc & df[ma_ready]
         inc2 = inc & ~df[ma_ready]
@@ -460,22 +462,38 @@ def bokeh_draw(
     p.add_tools(hover)
 
     if df.sell.iloc[-1] | df.scall.iloc[-1]:
-        label = Label(
-            x=df.idx.iloc[1], 
-            y=df.close.iloc[-1],  
-            x_offset=10, 
-            y_offset=-30,
-            text='SELL',
-            # most important font family
-            text_font= 'courier', #'sans-serif',
-            text_font_size='28pt',
-            text_font_style='bold italic',
-            text_color='red',
-            #border_line_color='#c3c99a',
-            #background_fill_color='#c3c99a'
-        )
+        l_text = 'SELL'
+        l_text_color = 'red'
+    elif df.buy.iloc[-1] | df.sput.iloc[-1]:
+        l_text = 'BUY'
+        l_text_color = 'green'
+    elif last_ma_bullish:
+        l_text = 'BULL'
+        l_text_color = 'orange'
+    elif ~df[ma_ready].iloc[-1]:
+        l_text = 'BEAR'
+        l_text_color = 'blue'
+    else:
+        l_text = 'DUBIOUS'
+        l_text_color = 'gray'
+    
+    
+    label = Label(
+        x=df.idx.iloc[1], 
+        y=df.close.iloc[-1],  
+        x_offset=10, 
+        y_offset=-30,
+        text=l_text,
+        # most important font family
+        text_font= 'courier', #'sans-serif',
+        text_font_size='28pt',
+        text_font_style='bold italic',
+        text_color=l_text_color,
+        #border_line_color='#c3c99a',
+        #background_fill_color='#c3c99a'
+    )
 
-        p.add_layout(label)
+    p.add_layout(label)
 
     return p
     show(p)
