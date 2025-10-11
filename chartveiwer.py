@@ -130,15 +130,14 @@ if selected_stock in ['SPY','QQQ']:
     #plot_raw_data()
     #st.text(f'Buy spread at price: -{CreditOptionSpread.min_gain_to_strikes(sell_opt_strike,buy_opt_strike,min_gain_risk_ratio=float(Fraction(min_gain_risk_ratio)))}')
 
-
-if st.session_state.get('show_info', False):
-    st.write(info)
-
-if st.button("Show/Hide Raw Info"):
-    st.session_state.show_info = not st.session_state.get('show_info', False)
-
 #st.text(f'{selected_stock} data from {len(df)} bars, {round(df.close.iloc[0],2)} -> {round(df.close.iloc[-1],2)}')
 st.write(df.tail())
 #st.write(df.columns.sort_values())
+
+if st.button("Show/Hide Raw Info"):
+    st.session_state.show_info = not st.session_state.get('show_info', False)
+if st.session_state.get('show_info', False):
+    st.write(info)
+
 
 play_audio()
