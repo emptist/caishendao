@@ -8,6 +8,7 @@ import pandas as pd
 # import hvplot.pandas  # noqa # Unused
 from bokeh.plotting import figure, show  # output_file
 from bokeh.models import (
+    Label,
     LinearAxis,
     Range1d,
     ColumnDataSource,
@@ -457,6 +458,25 @@ def bokeh_draw(
         mode="mouse",
     )
     p.add_tools(hover)
+
+    if df.sell.iloc[-1] | df.scall.iloc[-1]:
+        label = Label(
+            x=df.idx.iloc[1], 
+            y=df.close.iloc[-1],  
+            x_offset=10, 
+            y_offset=-30,
+            text='SELL',
+            # most important font family
+            text_font= 'courier', #'sans-serif',
+            text_font_size='28pt',
+            text_font_style='bold italic',
+            text_color='red',
+            #border_line_color='#c3c99a',
+            #background_fill_color='#c3c99a'
+        )
+
+        p.add_layout(label)
+
     return p
     show(p)
 
