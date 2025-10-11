@@ -73,9 +73,6 @@ def plot_raw_data(df,interval,whole_view):
             longName = info['longName']
         except Exception as e:
             longName = selected_stock
-
-        
-        
         #min(selected_length,len(df)-1)
         #height= selected_height//2
         height= selected_height
@@ -134,10 +131,11 @@ if selected_stock in ['SPY','QQQ']:
 st.write(df.tail())
 #st.write(df.columns.sort_values())
 
+
+play_audio()
+
 if st.button("Show/Hide Raw Info"):
     st.session_state.show_info = not st.session_state.get('show_info', False)
 if st.session_state.get('show_info', False):
     st.write(info)
 
-
-play_audio()
