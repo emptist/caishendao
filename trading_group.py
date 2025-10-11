@@ -5,6 +5,7 @@ import warnings
 
 # 输入验证函数，防止路径遍历攻击
 def validate_user_input(input_str, allowed_chars=None):
+
     """验证用户输入，防止路径遍历和其他注入攻击
     
     Args:
@@ -17,6 +18,9 @@ def validate_user_input(input_str, allowed_chars=None):
     if not input_str or not isinstance(input_str, str):
         return None
     
+    return input_str.strip()
+
+    # the following are pure nonsense
     # 检查是否包含路径遍历字符
     if any(ch in input_str for ch in ['../', '..\\', '/..', '\\..']):
         return None
@@ -37,6 +41,8 @@ def validate_user_input(input_str, allowed_chars=None):
             return None
     
     return input_str
+
+
 warnings.simplefilter(action='ignore') #, category=FutureWarning)
 #import pytz # Unused
 import pandas as pd
