@@ -285,6 +285,19 @@ def build_page():
 
         # --- AG Grid Table Implementation ---
 
+        # Calculate dynamic height for the grid
+        row_height = 35  # Approximate height of a single row in pixels
+        header_height = 40  # Approximate height of the header row in pixels
+        max_rows_to_display = 4
+
+        if len(df) > max_rows_to_display:
+            # If the number of rows exceeds the max, fix the height to show max_rows_to_display
+            # Add a small buffer for the horizontal scrollbar if it appears
+            grid_height = header_height + (max_rows_to_display * row_height) + 18
+        else:
+            # If there are fewer rows than the max, calculate the height to fit them perfectly
+            grid_height = header_height + (len(df) * row_height)
+
         # Configure the grid options
         gb = GridOptionsBuilder.from_dataframe(df)
         gb.configure_selection(
@@ -305,9 +318,6 @@ def build_page():
 
         gridOptions = gb.build()
 
-        # Manually add grid options for auto-sizing and auto-height
-        gridOptions['domLayout'] = 'autoHeight'
-        
         # Removed autoSizeStrategy to use fixed widths for better control
         # gridOptions['autoSizeStrategy'] = {'type': 'fitCellContents'}
 
@@ -315,6 +325,7 @@ def build_page():
         grid_response = AgGrid(
             df,
             gridOptions=gridOptions,
+            height=grid_height,
             update_mode=GridUpdateMode.SELECTION_CHANGED,
             data_return_mode=DataReturnMode.AS_INPUT,
             width='100%',
