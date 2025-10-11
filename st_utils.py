@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 
 def set_page_background_color(df):
@@ -63,3 +64,18 @@ def set_custom_background_color(color):
         )
     except Exception as e:
         print(f"设置自定义背景色时出错: {e}")
+
+
+
+def play_audio():
+    local_file_path = './dizang.mp3'  # Ensure the file is in the same directory as your script
+    # Read the local audio file with error handling
+    if os.path.exists(local_file_path):
+        try:
+            with open(local_file_path, 'rb') as audio_file:
+                data = audio_file.read()
+            st.audio(data,format='audio/mpeg',autoplay=True,loop=True)
+        except Exception as e:
+            st.warning(f"Can't play audio: {e}")
+    else:
+        st.info(f"File not found: {local_file_path}")

@@ -15,7 +15,7 @@ from getsymbols import get_symbols
 
 # Import AI analysis function
 from ai_analysis import st_ai_analysis_area
-from st_utils import set_page_background_color
+from st_utils import set_page_background_color, play_audio
 
 
 
@@ -358,18 +358,6 @@ def build_page():
     else:
         st.write('No symbol selected')
     
+    play_audio()
 build_page()
 
-
-import os
-local_file_path = './dizang.mp3'  # Ensure the file is in the same directory as your script
-# Read the local audio file with error handling
-if os.path.exists(local_file_path):
-    try:
-        with open(local_file_path, 'rb') as audio_file:
-            data = audio_file.read()
-        st.audio(data,format='audio/mpeg',autoplay=True,loop=True)
-    except Exception as e:
-        st.warning(f"Can't play audio: {e}")
-else:
-    st.info(f"File not found: {local_file_path}")
