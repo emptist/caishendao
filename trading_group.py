@@ -178,7 +178,20 @@ class Quote:
         return round(p, 2)
 
     def high_cnstvelo(self,limit=4):
-        v = self.cnstvelo_value() 
+        v = self.cnstvelo_value()
+        match self.interval:
+            case '1h':
+                limit = limit/10
+            case '1d':
+                limit = limit
+            case '1w':
+                limit = limit*5
+            case '1mo':
+                limit = limit*20
+            case '3mo':
+                limit = limit*60
+            case _:
+                limit = limit
         result = v >= limit
         return result
 
@@ -197,6 +210,19 @@ class Quote:
 
     def high_velo(self,limit=0.1):
         v = self.velo_value() 
+        match self.interval:
+            case '1h':
+                limit = limit/10
+            case '1d':
+                limit = limit
+            case '1w':
+                limit = limit*5
+            case '1mo':
+                limit = limit*20
+            case '3mo':
+                limit = limit*60
+            case _:
+                limit = limit
         result = v >= limit
         return result
 
