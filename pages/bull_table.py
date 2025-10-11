@@ -16,6 +16,7 @@ from getsymbols import get_symbols
 # Import AI analysis function
 from ai_analysis import st_ai_analysis_area
 from st_utils import set_page_background_color, play_audio
+from streamlit_js_eval import streamlit_js_eval
 
 
 
@@ -285,18 +286,25 @@ def build_page():
 
         # --- AG Grid Table Implementation ---
 
+        # Get screen height to make the grid responsive
+        screen_height = streamlit_js_eval(js_expressions='screen.height', want_output=True, key='SCR_H')
+
+        # Set a default screen height if the JS evaluation fails
+        if screen_height is None:
+            screen_height = 800  # A reasonable default
+
         # Calculate dynamic height for the grid
         row_height = 35  # Approximate height of a single row in pixels
         header_height = 40  # Approximate height of the header row in pixels
-        max_rows_to_display = 4
 
-        if len(df) > max_rows_to_display:
-            # If the number of rows exceeds the max, fix the height to show max_rows_to_display
-            # Add a small buffer for the horizontal scrollbar if it appears
-            grid_height = header_height + (max_rows_to_display * row_height) + 18
-        else:
-            # If there are fewer rows than the max, calculate the height to fit them perfectly
-            grid_height = header_height + (len(df) * row_height)
+        # Calculate the height required to display all rows
+        full_grid_height = header_height + (len(df) * row_height)
+
+        # Calculate 20% of the screen height as the maximum height
+        max_grid_height = screen_height * 0.2
+
+        # Use the smaller of the two values
+        grid_height = min(full_grid_height, max_grid_height)
 
         # Configure the grid options
         gb = GridOptionsBuilder.from_dataframe(df)
