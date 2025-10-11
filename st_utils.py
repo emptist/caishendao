@@ -4,38 +4,31 @@ import os
 
 def set_page_background_color(df):
     """set page background color based on signals in df
-    
-    color mapping:
-    - deep red (#c62828)
-    - shallow red (#ffe6e6)
-    - deep green (#2e7d32)
-    - shallow green (#e8f5e8)
-    - deep blue: #0022ff
-    - shallow blue: #e6f7ff #0007ff
-    
     Args:
         df: data frame with signals
     """
+
     if len(df) == 0:
         return
         
     # default to white background
     bg_color = '#ffffff'
-    
     try:
         if df.sell.iloc[-1]:
             bg_color = '#c62828'
         elif df.scall.iloc[-1]:
-            bg_color = '#ffe6e6'
+            bg_color = '#e63c5e'
         elif df.buy.iloc[-1]:
-            bg_color = '#e6f7ff'
+            bg_color = '#ffffff'
         elif df.sput.iloc[-1]: #| df.buy.iloc[-1]:
-            bg_color = '#0007ff'
+            bg_color = '#ffffff'
+        else:
+            bg_color = '#9ba9f4'
 
     except Exception as e:
         # 如果出现任何错误，使用默认背景色并打印错误信息
         print(f"设置背景色时出错: {e}")
-        bg_color = '#ffffff'
+        bg_color = '#9ba9f4'
     
     # 使用CSS设置页面背景
     st.markdown(
