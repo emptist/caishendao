@@ -51,15 +51,15 @@ class BullTableSettings:
 
 class StQuote(Quote):
     #async 
-    def plot_raw_data(self,symbol,whole_view,in_y2,width,length,height,symbol_info):
+    def plot_raw_data(self,symbol,whole_view,in_y2,length,height,symbol_info):
         #min(selected_length,len(df)-1)
         df = self.df[-length:]
         if len(df) < 1:
             spinner_text.text(f'No df of {symbol}')
             return
 
-        p = draw(symbol,df,just_data=True,whole_view=whole_view,\
-            in_y2=in_y2,width=width,height=height,interval=self.interval,symbol_info=symbol_info)
+        p = draw(symbol,df,just_data=True,whole_view=whole_view,
+            in_y2=in_y2,height=height,interval=self.interval,symbol_info=symbol_info)
         
         components.html(file_html(p, 'cdn',), width=None,height=height)    
         #st.bokeh_chart(p,use_container_width=True)
@@ -187,13 +187,11 @@ def build_page():
     """
 
     # --- Controls ---
-    col0, col1, col2, col3, col4, col5, col6, col7, col8, col9 = st.columns(10)
+    col0, col1, col3, col4, col5, col6, col7, col8, col9 = st.columns(9)
     with col0:
         selected_type = st.selectbox('Type', BullTableSettings.stock_types)
     with col1:
         selected_interval = st.selectbox('Interval', BullTableSettings.intervals)
-    with col2:
-        selected_width = st.number_input('Width', value=BullTableSettings.default_width)
     with col3:
         # Add AI Provider selection
         ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])
@@ -346,7 +344,6 @@ def build_page():
         q = stk_group.full_dict[symbol].quotes[interval]
         q.plot_raw_data(
             symbol, selected_whole_view, selected_y2,
-            width=selected_width,
             length=selected_length,
             height=selected_height // len_all_intervals - 10,
             symbol_info=symbol_info
