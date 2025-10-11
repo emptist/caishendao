@@ -15,7 +15,7 @@ from getsymbols import get_symbols
 
 # Import AI analysis function
 from ai_analysis import st_ai_analysis_area
-
+from st_utils import set_page_background_color
 
 
 
@@ -43,7 +43,7 @@ class BullTableSettings:
     display_lengths = [150,300,600,1200,2400,4800,9600]
     
     # 默认配置
-    default_width = 1150
+    default_width = 1350
     default_height = 500
     default_d_ceiling = 105
     default_pe_limit = 30
@@ -57,11 +57,13 @@ class StQuote(Quote):
         if len(df) < 1:
             spinner_text.text(f'No df of {symbol}')
             return
+
         p = draw(symbol,df,just_data=True,whole_view=whole_view,\
             in_y2=in_y2,width=width,height=height,interval=self.interval,symbol_info=symbol_info)
         
         components.html(file_html(p, 'cdn',), width=width,height=height)    
         #st.bokeh_chart(p,use_container_width=True)
+        set_page_background_color(df)
 
 
 class StStockData(StockData):

@@ -4,6 +4,8 @@ from illustration import bokeh_draw as draw
 from settings import MySetts
 from toolfuncs import get_any_df
 from ai_analysis import st_ai_analysis_area
+from st_utils import set_page_background_color
+
 
 
 # Initialize a session state variable that tracks the sidebar state (either 'expanded' or 'collapsed').
@@ -27,7 +29,7 @@ intervals = ['1d', '1mo', '1wk', '1h', '3mo', '30m', '15m', '1m', '2m', '5m', '6
 col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 with col1:
-    selected_width = st.number_input('Width', value=1100) #=2500 if selected_whole_view else 1200)
+    selected_width = st.number_input('Width', value=1350) #=2500 if selected_whole_view else 1200)
 with col2:
     selected_height = st.number_input('Height', value=500) #400 if selected_stock in ['SPY','QQQ'] else 500)
 with col3:
@@ -70,6 +72,9 @@ def plot_raw_data(df,interval,whole_view):
             longName = info['longName']
         except Exception as e:
             longName = selected_stock
+
+        
+        
         #min(selected_length,len(df)-1)
         #width = selected_width//2
         #height= selected_height//2
@@ -81,7 +86,7 @@ def plot_raw_data(df,interval,whole_view):
             just_data=True,
             whole_view=whole_view,
             in_y2=selected_y2,
-            width=width,
+            width=width - 30,
             height=height,
             interval=interval,
             symbol_info= longName
@@ -89,6 +94,7 @@ def plot_raw_data(df,interval,whole_view):
         from bokeh.embed import file_html
         components.html(file_html(p, 'cdn', ), width=selected_width,height=height)    
         #st.bokeh_chart(p,use_container_width=True)
+        set_page_background_color(df)
 
 if True:
 #chart1,chart2=st.columns(2)
