@@ -34,3 +34,8 @@ localBackup
 #actual/*
 .streamlit/secrets.toml
 .ai_ana_records/
+# Build directories
+build/
+dist/
+.eggs/
+*.egg
