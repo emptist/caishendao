@@ -589,9 +589,9 @@ def df_prepare(df,interval):
 def predicted(df,interval,fully=True,gists=True):
     df = df_prepare(df,interval)
     # this part is not yet that useful
-    pre_d = False
-    if pre_d:
-        df = predict_kdj_d(df,interval)
+    prd_kdj = False
+    if prd_kdj:
+        df = predict_kdj(df,interval)
 
     df = set_entries(df,interval,gists=gists)
     df = refine_columns_for_backtesting(df)
@@ -622,7 +622,7 @@ def add_capd_columns(df, columns_to_capitalize):
 
 
 # predict whether d is at an edge 
-def predict_kdj_d(df,interval):
+def predict_kdj(df,interval):
     predict_dh(df)
     predict_dl(df)
     return df
@@ -793,45 +793,23 @@ def cma_sma_equal(df,interval):
     return df.sma7 == df.lcmah7
 
 # must use with (final_)sma_series_up
-def cma_series_up(df,interval=None,gists=True):
-    u701 = True if interval in ['1h',] and gists else risen(df,'lcmah7')
-    u702 = risen(df,'sma7')
-    u703 = (df.sma7 >= df.lcmah7) if interval == '1d' else gists 
-    #u704 = cma_sma_equal(df,interval) # we do this at trading_group approved
-    #u712 = (df.lrows7 > 0)
-    u721 = (df.close >= df.lcmah7)
-    u722 = (df.close >= df.sma7)
-    #cmas_up7 = (u701 | u702) #& (u711 | u712)
-    cmas_up7 = u703 & u701 & u702 #& (u711 | u712)
-    cmas_up_m = cmas_up7 & (u721 | u722)
-    
-    if gists:
-        return cmas_up_m
+def cma_series_up(df,interval=None):
+    big_interval = interval in ['3mo','1mo','1wk']
+    sma7_upon_lcmah7 = big_interval | (df.sma7 >= df.lcmah7)
+    cmas_up7 = sma7_upon_lcmah7 & rising(df,'lcmah7') & rising(df,'sma7')
 
-    match interval:
-        case '3mo':
-            cmas_up = cmas_up_m
-        case '1mo':
-            cmas_up = cmas_up_m
-        case _:
-            ub01 = risen(df,'lcmahbbm')
-            ub02 = risen(df,'bbm')
-            #ub12 = df.lrowsbbm > 0
-            ub21 = (df.close >= df.lcmahbbm)
-            ub22 = (df.close >= df.bbm)
-            cmas_upb = (ub01 | ub02) #& (ub11 | ub12)
-            cmas_ups = cmas_up7 & cmas_upb & (ub21 | ub22 | u721 | u722) 
-            cmas_up = cmas_up_m | cmas_ups
-            
+    close_upon_lcmah7 = (df.close >= df.lcmah7)
+    close_upon_sma7 = (df.close >= df.sma7)
+    cmas_up = cmas_up7 & (close_upon_lcmah7 | close_upon_sma7)
+    
     return cmas_up
 
 
-
-def sma_series_up(df,interval=None,gists=True):
+def sma_series_up(df):
     return risen(df,'sma7') & risen(df,'bbm')
 
 
-def final_sma_series_up(df,interval=None,gists=True):
+def final_sma_series_up(df,interval=None):
     dfl = len(df)
     bb_ma_window = MySetts.bb_ma_window(interval)
     far_bar = min(bb_ma_window+1, dfl)
@@ -883,7 +861,7 @@ def set_opt_entries(df,interval,gists=True):
         NEVER CHANGE THESE CONDITIONS
 
     """
-    df['cmas_up'] = cma_series_up(df,interval,gists=gists) 
+    df['cmas_up'] = cma_series_up(df,interval) 
     df['smas_up'] = sma_series_up(df)
     df['avrgs_bull'] = df.smas_up & df.cmas_up
     df['avrgs_bear'] = ~df.smas_up & ~df.cmas_up

@@ -292,7 +292,7 @@ class Quote:
 
     
     def final_smas_up(self):
-        up = final_sma_series_up(self.df,self.interval,gists=self.gists)
+        up = final_sma_series_up(self.df,self.interval)
         #print(f'gists: {self.gists} final_smas_up: {up}')
         return up
     
