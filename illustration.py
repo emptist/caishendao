@@ -463,7 +463,7 @@ def bokeh_draw(
 
     if df.sell.iloc[-1] | df.scall.iloc[-1]:
         l_text = 'SELL'
-        l_text_color = 'magenta'
+        l_text_color = 'red'
         l_text_y_offset = -30
     elif df.buy.iloc[-1] | df.sput.iloc[-1]:
         l_text = 'BUY'
@@ -471,7 +471,7 @@ def bokeh_draw(
         l_text_y_offset = 30
     elif last_ma_bullish:
         l_text = 'BULL'
-        l_text_color = 'red'
+        l_text_color = 'darkorange'
         l_text_y_offset = -30
     elif ~df.smas_up.iloc[-1] & ~df.cmas_up.iloc[-1]:
         l_text = 'BEAR'
