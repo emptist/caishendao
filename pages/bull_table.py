@@ -206,22 +206,25 @@ def build_page():
     with col8:
         selected_filter = st.selectbox('Filter', BullTableSettings.filters)
     with col9:
-        symbols = set_symbols(type=selected_type)
-        pe_limit = BullTableSettings.default_pe_limit if selected_type == 'Stocks' else None
-        stk_group = prepare_group(symbols, interval=selected_interval, pe_limit=pe_limit) #, gists=selected_type=='Gists')
+        """
+        """
 
-        # This needs to be done *before* the selectbox for selected_symbol is rendered
-        symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
-        st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-        #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
+    symbols = set_symbols(type=selected_type)
+    pe_limit = BullTableSettings.default_pe_limit if selected_type == 'Stocks' else None
+    stk_group = prepare_group(symbols, interval=selected_interval, pe_limit=pe_limit) #, gists=selected_type=='Gists')
 
-        # Initialize or get the selected symbol from session state
-        # if 'selected_symbol' not in st.session_state:
-        #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    # This needs to be done *before* the selectbox for selected_symbol is rendered
+    symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
+    st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
 
-        # # Ensure the selected symbol is still in the current list
-        # if st.session_state.selected_symbol not in symbol_list:
-        #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    # Initialize or get the selected symbol from session state
+    # if 'selected_symbol' not in st.session_state:
+    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+
+    # # Ensure the selected symbol is still in the current list
+    # if st.session_state.selected_symbol not in symbol_list:
+    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
 
     len_all_intervals = len(stk_group.all_intervals)
