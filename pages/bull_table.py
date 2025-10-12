@@ -27,8 +27,8 @@ st.sidebar.header('Bulls Detector')
 
 stk_and_charts = st.empty()
 container = st.container()
-with container:
-    spinner_text = st.text('')
+# with container:
+#     spinner_text = st.text('')
 
 
 # bull_table应用专用配置
@@ -53,7 +53,7 @@ class StQuote(Quote):
         #min(selected_length,len(df)-1)
         df = self.df[-length:]
         if len(df) < 1:
-            spinner_text.text(f'No df of {symbol}')
+            #spinner_text.text(f'No df of {symbol}')
             return
 
         p = draw(symbol,df,just_data=True,whole_view=whole_view,
@@ -185,7 +185,7 @@ def build_page():
     """
 
     # --- Controls ---
-    col1, col2, col3, col4, col5, col6, col7, col8, col9 = st.columns(9)
+    col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
     with col2:
         selected_type = st.selectbox('Type', BullTableSettings.stock_types)
     with col5:
@@ -205,9 +205,9 @@ def build_page():
         selected_length = st.selectbox('Chart Bars', BullTableSettings.display_lengths)
     with col8:
         selected_filter = st.selectbox('Filter', BullTableSettings.filters)
-    with col9:
-        """
-        """
+    # with col9:
+    #     """
+    #     """
 
     symbols = set_symbols(type=selected_type)
     pe_limit = BullTableSettings.default_pe_limit if selected_type == 'Stocks' else None
