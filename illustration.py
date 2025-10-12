@@ -141,16 +141,16 @@ def bokeh_draw(
     # one tick per week (5 weekdays)
     # p.xaxis.ticker = list(range(df.idx[0], df.idx[-1], 5))
 
-    ma_ready = "smas_up"
+    
     # Add conditional background based on 'somecondition'
     # for _, row in df.iterrows():
-    #    if row[ma_ready]:
+    #    if row.smas_up:
     #        idx = row.idx
     #        box = BoxAnnotation(left=idx-w, right=idx+w, fill_alpha=0.1, fill_color='blue')
     #        p.add_layout(box)
 
-    # if df[ma_ready].iloc[-1]:
-    last_ma_bullish = df[ma_ready].iloc[-1] & df["cmas_up"].iloc[-1]
+    # if df.smas_up.iloc[-1]:
+    last_ma_bullish = df.smas_up.iloc[-1] & df.cmas_up.iloc[-1]
     if last_ma_bullish:
         # if df.sput.iloc[-1]:
         p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
@@ -160,16 +160,16 @@ def bokeh_draw(
     dec = df.open >= df.close
     # try:
     if False: #interval in ["1h", "1d", "1wk", "1mo"]:
-        ma_bullish = df[ma_ready] & df["cmas_up"]
-        inc1 = inc & ma_bullish
-        inc2 = inc & ~ma_bullish
-        dec1 = dec & ma_bullish
-        dec2 = dec & ~ma_bullish
+        
+        inc1 = inc & df.avrgs_bull
+        inc2 = inc & ~df.avrgs_bull
+        dec1 = dec & df.avrgs_bull
+        dec2 = dec & ~df.avrgs_bull
     else:
-        inc1 = inc & df[ma_ready]
-        inc2 = inc & ~df[ma_ready]
-        dec1 = dec & df[ma_ready]
-        dec2 = dec & ~df[ma_ready]
+        inc1 = inc & df.smas_up
+        inc2 = inc & ~df.smas_up
+        dec1 = dec & df.smas_up
+        dec2 = dec & ~df.smas_up
 
     # candle sticks
     p.segment(
@@ -473,7 +473,7 @@ def bokeh_draw(
         l_text = 'BULL'
         l_text_color = 'orange'
         l_text_y_offset = -30
-    elif ~df[ma_ready].iloc[-1] & ~df['cmas_up'].iloc[-1]:
+    elif ~df.smas_up.iloc[-1] & ~df.cmas_up.iloc[-1]:
         l_text = 'BEAR'
         l_text_color = 'blue'
         l_text_y_offset = 30
