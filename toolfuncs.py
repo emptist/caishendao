@@ -598,12 +598,15 @@ def df_prepare(df,interval):
 
 def predicted(df,interval,fully=True,gists=True):
     df = df_prepare(df,interval)
+
     # this part is not yet that useful
     pre_d = False
     if pre_d:
-        df = predict_d(df,interval)
+        df = predict_kdj_d(df,interval)
+
     df = set_entries(df,interval,gists=gists)
-    df = refine_columns_for_backtesting(df)    
+    df = refine_columns_for_backtesting(df)
+
     if fully == True:
         return df
     else:
@@ -630,7 +633,7 @@ def add_capd_columns(df, columns_to_capitalize):
 
 
 # predict whether d is at an edge 
-def predict_d(df,interval):
+def predict_kdj_d(df,interval):
     predict_dh(df)
     predict_dl(df)
     return df
@@ -929,7 +932,7 @@ def set_opt_entries(df,interval,gists=True):
 
     """
     df['cmas_up'] = cma_series_up(df,interval,gists=gists) 
-    df['smas_up'] = sma_series_up(df,interval,gists=gists)
+    df['smas_up'] = sma_series_up(df)
     df['avrgs_bull'] = df.smas_up & df.cmas_up
     df['avrgs_bear'] = ~df.smas_up & ~df.cmas_up
     
