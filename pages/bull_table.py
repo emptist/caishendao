@@ -3,9 +3,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 from bokeh.embed import file_html
-#import html
-#import requests
-#import json
 
 from illustration import bokeh_draw as draw
 from favorites import MyFavorites
