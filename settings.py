@@ -12,6 +12,30 @@ class MySetts:  # (USTradingTime):
 
     hour_bars_per_day = 17  # 9 # use half of total: 25 in Futu, 17 in YF
     
+    @staticmethod
+    def equivalence_to_days(interval):
+        match interval:
+            case '1d':
+                return 1
+            case "1wk":
+                return 5
+            case "1mo":
+                return 20
+            case "3mo":
+                return 60
+            case "1h":
+                return 1/16
+            case "30m":
+                return 1/32
+            case "15m":
+                return 1/64
+            case "5m":
+                return 1/192
+            case "3m":
+                return 1/320
+            case "1m":
+                return 1/960
+
 
     @staticmethod
     def calc_hrow_max(interval):
