@@ -921,24 +921,28 @@ def consoling_sma(df,x):
 # entries are for short on options only
 # everything simplified
 def set_opt_entries(df,interval,gists=True):
+    """
+        
+        KEY TO TREND DRIVE TRADING
+
+        NEVER CHANGE THESE CONDITIONS
+
+    """
     df['cmas_up'] = cma_series_up(df,interval,gists=gists) 
     df['smas_up'] = sma_series_up(df,interval,gists=gists)
     df['avrgs_bull'] = df.smas_up & df.cmas_up
     df['avrgs_bear'] = ~df.smas_up & ~df.cmas_up
-    # both_equal = cma_sma_equal(df,interval)
-    # d_level = MySetts.d_level
-    # low_d = df.d <= d_level + 10
-    # high_d = df.d > d_level - 10
+    
 
     # NOTE: only k >= d and low <= sma7 or first 2 bars that low > sma7 are marked True
     # count bars that k > d and low > sma 
-    df['kods'] = series_bars_since((df.k > df.d) & (df.low > df.sma7))
-    df['sput'] = (df.smas_up if gists else df.avrgs_bull) & (df.k >= df.d) & (df.kods < 3) #& low_d
+    bars_k_on_d =series_bars_since((df.k > df.d) & (df.low > df.sma7))
+    df['sput'] = df.avrgs_bull & (df.k >= df.d) & (bars_k_on_d < 3) #& low_d
 
     # NOTE: only k < d and high > sma7 or first 2 bars that high < sma7 are marked True
     # count bars that k < d and high < sma 
-    df['doks'] = series_bars_since((df.k < df.d) & (df.high < df.sma7))
-    df['scall'] = (~df.avrgs_bull) & (df.j < df.d) & (df.doks < 3) #& high_d
+    bars_d_on_k =series_bars_since((df.k < df.d) & (df.high < df.sma7))
+    df['scall'] = ~df.avrgs_bull & (df.j < df.d) & (bars_d_on_k < 3) #& high_d
 
     
 
