@@ -1,10 +1,13 @@
 import math
 from fractions import Fraction
+import urllib.request
 
 class MySetts:  # (USTradingTime):
-    use_proxy = False #True # However we don't need a proxy running, I don't know why
-    yf_proxy = "http://127.0.0.1:7890" if use_proxy else None
-    yfs_proxy = yf_proxy
+    proxies = urllib.request.getproxies()
+    use_proxy = True if proxies else False
+    yf_proxy = proxies.get('http', None)
+    yfs_proxy = proxies.get('https', yf_proxy)
+    yf_socks_proxy = proxies.get('socks', None)
 
     ai_provider = "alibabacloud" if use_proxy else "gemini"  # 可选: "gemini", "alibabacloud"
     alibabacloud_api_base = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
@@ -199,3 +202,4 @@ class MySetts:  # (USTradingTime):
 
         return underline_symbol
 """
+
