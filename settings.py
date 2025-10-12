@@ -1,3 +1,6 @@
+import math
+from fractions import Fraction
+
 class MySetts:  # (USTradingTime):
     use_proxy = False #True # However we don't need a proxy running, I don't know why
     yf_proxy = "http://127.0.0.1:7890" if use_proxy else None
@@ -13,32 +16,46 @@ class MySetts:  # (USTradingTime):
     hour_bars_per_day = 17  # 9 # use half of total: 25 in Futu, 17 in YF
     
     @staticmethod
-    def equivalence_to_days(interval):
+    def equivalence_to_days(interval: str) -> Fraction:
         match interval:
             case '1d':
-                return 1
+                return Fraction(1,1)
             case "1wk":
-                return 5
+                return Fraction(5,1)
             case "1mo":
-                return 20
+                return Fraction(20,1)
             case "3mo":
-                return 60
+                return Fraction(60,1)
             case "1h":
-                return 1/16
+                return Fraction(1,16)
+            case "2h":
+                return Fraction(1,8)
+            case "4h":
+                return Fraction(1,4)
+            case "60m":
+                return Fraction(1,16)
             case "30m":
-                return 1/32
+                return Fraction(1,32)
             case "15m":
-                return 1/64
+                return Fraction(1,64)
             case "5m":
-                return 1/192
+                return Fraction(1,192)
             case "3m":
-                return 1/320
+                return Fraction(1,320)
             case "1m":
-                return 1/960
+                return Fraction(1,960)
+            case _:
+                return Fraction(1,1)
 
 
     @staticmethod
-    def calc_hrow_max(interval):
+    def bb_ma_window(interval: str,window_d: int = 140) -> int:
+        equiv_d = MySetts.equivalence_to_days(interval)
+        return math.ceil(window_d/equiv_d)
+
+    # --- some old codes are not carefully designed ---
+    @staticmethod
+    def calc_hrow_max(interval: str) -> int:
         if interval == "1wk":
             hrow_max = 3
         elif interval == "1mo":
