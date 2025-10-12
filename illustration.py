@@ -495,7 +495,7 @@ def bokeh_draw(
         text_font_style='bold italic',
         text_color=l_text_color,
         #border_line_color='#c3c99a',
-        #background_fill_color='#c3c99a'
+        background_fill_color='#c3c99a'
     )
 
     p.add_layout(label)
