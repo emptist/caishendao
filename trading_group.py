@@ -5,7 +5,6 @@ import warnings
 
 # 输入验证函数，防止路径遍历攻击
 def validate_user_input(input_str, allowed_chars=None):
-
     """验证用户输入，防止路径遍历和其他注入攻击
     
     Args:
@@ -42,7 +41,7 @@ def validate_user_input(input_str, allowed_chars=None):
     
     return input_str
 
-
+    
 warnings.simplefilter(action='ignore') #, category=FutureWarning)
 #import pytz # Unused
 import pandas as pd
