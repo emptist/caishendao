@@ -154,7 +154,7 @@ def bokeh_draw(
     if last_ma_bullish:
         # if df.sput.iloc[-1]:
         p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
-        p.background_fill_alpha = 0.2
+        p.background_fill_alpha = 0.9
 
     inc = df.close > df.open
     dec = df.open >= df.close
