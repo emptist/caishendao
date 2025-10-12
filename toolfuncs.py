@@ -452,17 +452,7 @@ def ta_bb(df,bb_length,num_std_dev=1.99):
 def calc_bb(df,cma,interval,num_std_dev=1.99):
     #print(f'> origin df.columns are \n {df.columns} shape {df.shape}')
     #bb_length = 420 if MySetts.hourly else 140 #60
-    match interval:
-        case '1h':
-            bb_length = 140 * MySetts.hour_bars_per_day #1200
-        case '1d':
-            bb_length = 140
-        case '1wk':
-            bb_length = 28
-        case '1mo':
-            bb_length = 7
-        case _:
-            bb_length = 140 #1200
+    bb_length = MySetts.bb_ma_window(interval)
 
     df_length = len(df)
     if df_length > bb_length:
@@ -598,7 +588,6 @@ def df_prepare(df,interval):
 
 def predicted(df,interval,fully=True,gists=True):
     df = df_prepare(df,interval)
-
     # this part is not yet that useful
     pre_d = False
     if pre_d:
@@ -839,53 +828,16 @@ def cma_series_up(df,interval=None,gists=True):
 
 
 def sma_series_up(df,interval=None,gists=True):
-    # suitable for 1d interval
-    #smas_up = rising_all(df,['sma7','sma14','sma60']) | rising_all(df,['sma7','sma14','sma30'])
-    dfl = len(df)
-    x7 = 7
-    x14 = 14
-    x30 = 30
-    x60 = 60
-    x140 = 140
-    #hx140 = x140 * MySetts.hour_bars_per_day
-
-    essential = risen(df,'sma7')
-    # if gists:
-    #     return essential 
-
-    match interval:
-        case '1d':
-            smas_up = essential & risen(df,'sma140')
-        case '1wk':
-            smas_up = essential & risen(df,'sma30')
-        case _:
-            smas_up = essential #& risen(df,'sma140')
-    return smas_up
+    return risen(df,'sma7') & risen(df,'bbm')
 
 
 def final_sma_series_up(df,interval=None,gists=True):
     dfl = len(df)
-    x7 = min(8,dfl)
-    x14 = min(15,dfl)
-    x30 = min(31,dfl)
-    x60 = min(61,dfl)
-    x140 = min(141,dfl)
-    #hx140 = min(140*MySetts.hour_bars_per_day+1,dfl)
-
-    essential = (dfl > 1) & final_risen(df,x7,'close')
+    bb_ma_window = MySetts.bb_ma_window(interval)
+    far_bar = min(bb_ma_window+1, dfl)
+    near_bar = min(7+1, dfl)
+    return (dfl>1) & final_risen(df,near_bar,'close') & final_risen(df,far_bar,'close')
     
-    #if gists:
-    #    return essential
-
-    match interval:
-        case '1d':
-            smas_up = essential & final_risen(df,x140,'close') # & final_risen(df,x30,'close')
-        case '1wk':
-            smas_up = essential & final_risen(df,x30,'close') #final_both_risen(df,x7,'high','close') & final_both_risen(df,x14,'high','close')
-        case _:
-            smas_up = essential 
-    return smas_up
-
 
 def falling(df,name,n=1):
     return df[name] < df[name].shift(n)
