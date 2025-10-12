@@ -158,37 +158,3 @@ class MySetts:  # (USTradingTime):
 
         return underline_symbol
 """
-
-# ib settings
-
-
-# ib get data settings
-# https://interactivebrokers.github.io/tws-api/historical_bars.html
-# Legal ones are: 1 secs, 5 secs, 10 secs, 15 secs, 30 secs, 1 min, 2 mins, 3 mins, 5 mins, 10 mins, 15 mins, 20 mins, 30 mins, 1 hour, 2 hours, 3 hours, 4 hours, 8 hours, 1 day, 1W, 1M,
-def get_bar_size(interval):
-    if "1mo" == interval:
-        return "1M"
-    elif "1wk" == interval:
-        return "1W"
-    elif "1d" == interval:
-        return "1 day"
-    elif "1h" == interval:
-        return "1 hour"
-    elif "1m" == interval:
-        return "1 min"
-    elif "1s" == interval:
-        return "1 secs"
-    elif "mo" in interval:
-        return "1M"  # no n months data
-    elif "wk" in interval:
-        return "1W"  # no n weeks data
-    elif "d" in interval:
-        return "1 day"  # no n days data
-    elif "h" in interval:
-        return interval[:-1] + " hours"
-    elif "m" in interval:
-        return interval[:-1] + " mins"
-    elif "s" in interval:
-        return interval[:-1] + " secs"
-
-
