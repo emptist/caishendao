@@ -938,7 +938,7 @@ def set_opt_entries(df,interval,gists=True):
     # NOTE: only k < d and high > sma7 or first 2 bars that high < sma7 are marked True
     # count bars that k < d and high < sma 
     df['doks'] = series_bars_since((df.k < df.d) & (df.high < df.sma7))
-    df['scall'] = (~df.smas_up | ~df.cmas_up) & (df.j < df.d) & (df.doks < 3) #& high_d
+    df['scall'] = (~df.a_bull) & (df.j < df.d) & (df.doks < 3) #& high_d
 
     
 
