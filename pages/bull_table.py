@@ -26,7 +26,7 @@ st.set_page_config(page_title='Bull',layout="wide",initial_sidebar_state=st.sess
 st.sidebar.header('Bulls Detector')
 
 stk_and_charts = st.empty()
-container = st.container()
+#container = st.container()
 # with container:
 #     spinner_text = st.text('')
 
