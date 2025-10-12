@@ -104,7 +104,7 @@ class Quote:
                 case 'scall':
                     return df.scall.iloc[-1]
                 case 'maGood':
-                    return df.a_bull.iloc[-1]
+                    return df.avrgs_bull.iloc[-1]
                 case 'JonD':
                     return df.j.iloc[-1] > df.d.iloc[-1]
                 case 'DonJ':
@@ -133,8 +133,8 @@ class Quote:
     def watch(self):
         return self.df_predict().df.watch.iloc[-1]
 
-    def a_bull(self):
-        return self.df_predict().df.a_bull.iloc[-1]
+    def avrgs_bull(self):
+        return self.df_predict().df.avrgs_bull.iloc[-1]
 
     def sput(self):
         return self.df_predict().df.sput.iloc[-1]
@@ -481,7 +481,7 @@ class StockGroup:
         g.recollect_dicts()
         
         def detecting(q,symbol=''):
-            return q.j_not_high() and q.key_macma_up() #and q.a_bull() 
+            return q.j_not_high() and q.key_macma_up() #and q.avrgs_bull() 
             #return q.buy()
         
         g.find_potential_target(detecting=detecting,srt=None)
@@ -517,7 +517,7 @@ class StockGroup:
 
 
         def detecting(q,symbol=''):
-            return q.a_bull() 
+            return q.avrgs_bull() 
             #return q.up_break() 
 
         def srt(e):
@@ -550,7 +550,7 @@ class StockGroup:
     def potential_group(cls,detecting,srt,symbols=None,all_intervals=None,init_interval=None,sort_by_interval=None,pe_limit=None,ignoreds={},base_group=None,base_data_tuple=None):
         """
             def detecting(q,symbol=''):
-                return q.a_bull() 
+                return q.avrgs_bull() 
             def srt(e):
                 return e.sort_by_interval_percent() 
         """
@@ -567,7 +567,7 @@ class StockGroup:
     def potential_groups(cls,init_intervals,sort_by_interval,all_intervals,detecting,srt,symbols=MyFavorites.pairs,pe_limit=None,ignoreds={},base_data_tuple=None):
         """
             def detecting(q,symbol=''):
-                return q.a_bull() 
+                return q.avrgs_bull() 
                 #return q.sput() 
             def srt(e):
                 return e.sort_by_interval_percent() 
