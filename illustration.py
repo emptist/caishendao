@@ -471,7 +471,7 @@ def bokeh_draw(
         l_text_y_offset = 30
     elif last_ma_bullish:
         l_text = 'BULL'
-        l_text_color = 'orange'
+        l_text_color = 'magenta'
         l_text_y_offset = -30
     elif ~df.smas_up.iloc[-1] & ~df.cmas_up.iloc[-1]:
         l_text = 'BEAR'
