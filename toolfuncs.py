@@ -923,7 +923,8 @@ def consoling_sma(df,x):
 def set_opt_entries(df,interval,gists=True):
     df['cmas_up'] = cma_series_up(df,interval,gists=gists) 
     df['smas_up'] = sma_series_up(df,interval,gists=gists)
-    both_up = df.smas_up & df.cmas_up
+    df['a_bull'] = df.smas_up & df.cmas_up
+    df['a_bear'] = ~df.smas_up & ~df.cmas_up
     # both_equal = cma_sma_equal(df,interval)
     # d_level = MySetts.d_level
     # low_d = df.d <= d_level + 10
@@ -932,15 +933,14 @@ def set_opt_entries(df,interval,gists=True):
     # NOTE: only k >= d and low <= sma7 or first 2 bars that low > sma7 are marked True
     # count bars that k > d and low > sma 
     df['kods'] = series_bars_since((df.k > df.d) & (df.low > df.sma7))
-    df['sput'] = (df.smas_up if gists else both_up) & (df.k >= df.d) & (df.kods < 3) #& low_d
+    df['sput'] = (df.smas_up if gists else df.a_bull) & (df.k >= df.d) & (df.kods < 3) #& low_d
 
     # NOTE: only k < d and high > sma7 or first 2 bars that high < sma7 are marked True
     # count bars that k < d and high < sma 
     df['doks'] = series_bars_since((df.k < df.d) & (df.high < df.sma7))
     df['scall'] = (~df.smas_up | ~df.cmas_up) & (df.j < df.d) & (df.doks < 3) #& high_d
 
-    # for old codes that use this
-    df['ma_good'] = df['smas_up'] & (df.close >= df.sma7)
+    
 
 
 
