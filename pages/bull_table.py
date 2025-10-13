@@ -229,6 +229,23 @@ def build_page():
 
 
     len_all_intervals = len(stk_group.all_intervals)
+    # If a symbol is selected (either from the dropdown or the grid), draw the chart
+    if st.session_state.selected_symbol:
+        # --- Charting area ---
+        symbol = st.session_state.selected_symbol
+        symbol_info = stk_group.get_longName(symbol)
+        interval = selected_interval
+        q = stk_group.full_dict[symbol].quotes[interval]
+        q.plot_raw_data(
+            symbol, selected_whole_view, selected_y2,
+            length=selected_length,
+            height=selected_height // len_all_intervals - 10,
+            symbol_info=symbol_info
+        )
+    else:
+        st.write('No symbol selected')
+
+
     # This is the list of columns we want to display in our table.
     info_columns = [
         #'longName', 
@@ -345,25 +362,12 @@ def build_page():
     else:
         st.write("No stocks found matching the criteria.")
 
+    # --- AI analysis area ---
     # If a symbol is selected (either from the dropdown or the grid), draw the chart
     if st.session_state.selected_symbol:
-        # --- Charting area ---
-        symbol = st.session_state.selected_symbol
-        symbol_info = stk_group.get_longName(symbol)
-        interval = selected_interval
-        q = stk_group.full_dict[symbol].quotes[interval]
-        q.plot_raw_data(
-            symbol, selected_whole_view, selected_y2,
-            length=selected_length,
-            height=selected_height // len_all_intervals - 10,
-            symbol_info=symbol_info
-        )
-        # --- AI analysis area ---
         info = stk_group.get_info(symbol)
         st_ai_analysis_area(symbol,info,ai_provider, session_state=st.session_state)
 
-    else:
-        st.write('No symbol selected')
     
     play_audio()
 build_page()
