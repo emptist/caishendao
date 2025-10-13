@@ -31,16 +31,16 @@ st.sidebar.header('Bulls Detector')
 #     spinner_text = st.text('')
 
 
-# bull_table应用专用配置
+# Bull Table Application Configuration
 class BullTableSettings:
-    # UI配置项
+    # UI Configuration Items
     stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
     intervals = ['1d','1h','30m','15m','1wk','1mo']
     filters = ['All','Foot','Fork','Leap','Potential','sput','buy','sell','scall','cmas_up','breakm','watch','maGood','<BBM','>=BBM','<bb4l','<bb6l','<bbl','<cmal', '<7', '>=7', 'DonJ', 'JonD']
     indicators = ['none','consis','both','kdj','bias']
     display_lengths = [150,300,600,1200,2400,4800,9600]
     
-    # 默认配置
+    # Default Configuration
     default_width = 1150
     default_height = 500
     default_d_ceiling = 105
@@ -71,25 +71,25 @@ class StStockData(StockData):
 
 
 class StStockGroup(StockGroup):
-    """Streamlit专用的Stock组类，继承自StockGroup
+    """Streamlit-specific Stock Group class, inherited from StockGroup
     
-    用于在Streamlit应用中处理和展示多只Stock的数据
+    Used for processing and displaying multiple stocks' data in Streamlit applications
     
     Attributes:
-        clsStockData: 使用StStockData类处理单只Stock数据
+        clsStockData: Uses StStockData class to process individual stock data
     """
     clsStockData = StStockData
 
 
 @st.cache_data(ttl=600)
 def set_symbols(type):
-    """根据类型获取Stock/ETF代码列表
+    """Get stock/ETF symbols list based on type
     
     Args:
-        type (str): Stock/ETF类型，如'Simple'、'Bios'、'Pairs'等
+        type (str): Stock/ETF type, such as 'Simple', 'Bios', 'Pairs', etc.
         
     Returns:
-        set: 对应类型的Stock/ETF代码集合
+        set: Collection of stock/ETF symbols for the specified type
     """
     if type == 'Simple':
         symbols = MyFavorites.pick_ups
@@ -131,15 +131,15 @@ def set_symbols(type):
 
 @st.cache_resource(ttl=600)
 def prepare_group(symbols_set, interval, pe_limit):
-    """准备Stock组数据
+    """Prepare stock group data
     
     Args:
-        symbols_set (set): Stock代码集合，用于缓存健壮性
-        interval (str): 时间间隔
-        pe_limit (int): 市盈率限制
+        symbols_set (set): Stock symbols collection for cache robustness
+        interval (str): Time interval
+        pe_limit (int): PE ratio limit
         
     Returns:
-        StStockGroup: 包含指定Stock的StStockGroup实例
+        StStockGroup: StStockGroup instance containing the specified stocks
     """
     
     reserved_set = {'GDX','GDXU','GLD','UGL'}
@@ -156,15 +156,15 @@ def prepare_group(symbols_set, interval, pe_limit):
 
 
 def refine_list(_stk_group,dceil,filter):
-    """根据筛选条件优化Stock列表
+    """Refine stock list based on filtering conditions
     
     Args:
-        _stk_group (StStockGroup): StStockGroup实例
-        dceil (int): d值上限
-        filter (str): 筛选条件
+        _stk_group (StStockGroup): StStockGroup instance
+        dceil (int): Maximum d-value
+        filter (str): Filtering condition
         
     Returns:
-        list: 符合条件的Stock代码列表
+        list: List of stock symbols that meet the conditions
     """
     symbol_list = _stk_group.select(dceil=dceil,filter=filter)
     return symbol_list
@@ -175,14 +175,14 @@ def refine_list(_stk_group,dceil,filter):
 
 
 def build_page():
-    """构建Streamlit应用页面，包括控件、表格和图表展示
+    """Build Streamlit application page, including controls, tables, and chart displays
     
-    功能包括：
-    - 提供各种筛选控件供用户选择
-    - 展示Stock数据表格
-    - 根据用户选择绘制Stock图表
-    - 生成并显示AI分析报告
-    - 播放提示音频
+    Features include:
+    - Provide various filtering controls for user selection
+    - Display stock data table
+    - Draw stock charts based on user selection
+    - Generate and display AI analysis reports
+    - Play notification audio
     """
 
     # --- Controls ---
@@ -216,22 +216,21 @@ def build_page():
 
     # This needs to be done *before* the selectbox for selected_symbol is rendered
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
-    #st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-    #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
-
-    # Initialize or get the selected symbol from session state
+    
+    # Only set default value on first page load or when no stock is selected, to avoid overriding user selection
     if 'selected_symbol' not in st.session_state or st.session_state.selected_symbol is None:
         st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    # Ensure the selected stock is still in the current list
+    elif st.session_state.selected_symbol not in symbol_list:
+        st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    
+    # Commented out - this line would reset the selected stock on every page run
+    # st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
-    # # Ensure the selected symbol is still in the current list
-    # if st.session_state.selected_symbol not in symbol_list:
-    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-
-
+    # --- Charting area --- (Now above the table)
     len_all_intervals = len(stk_group.all_intervals)
-    # If a symbol is selected (either from the dropdown or the grid), draw the chart
     if st.session_state.selected_symbol:
-        # --- Charting area ---
+        # Always display the chart with the current selected symbol from session state
         symbol = st.session_state.selected_symbol
         symbol_info = stk_group.get_longName(symbol)
         interval = selected_interval
@@ -244,7 +243,6 @@ def build_page():
         )
     else:
         st.write('No symbol selected')
-
 
     # This is the list of columns we want to display in our table.
     info_columns = [
@@ -271,6 +269,8 @@ def build_page():
     ]
 
     group_info = stk_group.info
+    selected_rows_data = None
+    
     if group_info and symbol_list:
         # Use the new method to get a filtered dataframe
         df = stk_group.get_filtered_info_df(symbol_list, columns=info_columns)
@@ -295,10 +295,6 @@ def build_page():
         df.reset_index(inplace=True)
         df.rename(columns={'index': 'symbol'}, inplace=True)
 
-        # Sort by number of analyst opinions
-        #if 'numberOfAnalystOpinions' in df.columns:
-        #    df.sort_values('numberOfAnalystOpinions', ascending=False, inplace=True, na_position='last')
-        
         # sort by cnstvelo
         df.sort_values('cnstvelo', ascending=False, inplace=True, na_position='last')
 
@@ -319,7 +315,8 @@ def build_page():
         gb.configure_selection(
             'single',
             use_checkbox=False,
-            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
+            # Pre-select the row that matches the current selected_symbol
+            pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] 
         )
         # Configure default columns with width constraints
         gb.configure_default_column(
@@ -329,13 +326,9 @@ def build_page():
             sortable=True, 
             resizable=True, 
             filterable=True,
-            #domLayout=['autoHeight','autoSize'],
         )
 
         gridOptions = gb.build()
-
-        # Removed autoSizeStrategy to use fixed widths for better control
-        # gridOptions['autoSizeStrategy'] = {'type': 'fitCellContents'}
 
         # Display the grid
         grid_response = AgGrid(
@@ -345,26 +338,28 @@ def build_page():
             update_mode=GridUpdateMode.SELECTION_CHANGED,
             data_return_mode=DataReturnMode.AS_INPUT,
             width='100%',
-            allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
+            allow_unsafe_jscode=True,
             enable_enterprise_modules=False,
-            key='stock_grid' # Add a key to avoid recreation issues
+            key='stock_grid'
         )
 
-        # If a new row is selected in the grid, update the selected_symbol
-        # and rerun the script to update the chart
-        selected_rows = grid_response['selected_rows']
-        if selected_rows is not None:
-            if not selected_rows.empty and selected_rows.iloc[0]['symbol'] != st.session_state.selected_symbol:
-                st.session_state.selected_symbol = selected_rows.iloc[0]['symbol']
-                st.rerun()
+        # Store selected rows data for later use
+        selected_rows_data = grid_response['selected_rows']
 
     elif symbol_list:
         st.write(symbol_list)
     else:
         st.write("No stocks found matching the criteria.")
 
+    # Update session state with selected symbol from grid
+    if selected_rows_data is not None and not selected_rows_data.empty:
+        selected_symbol_from_grid = selected_rows_data.iloc[0]['symbol']
+        if selected_symbol_from_grid != st.session_state.selected_symbol:
+            st.session_state.selected_symbol = selected_symbol_from_grid
+            # Force rerun to update chart with new selection using Streamlit's proper mechanism
+            st.rerun()
+
     # --- AI analysis area ---
-    # If a symbol is selected (either from the dropdown or the grid), draw the chart
     if st.session_state.selected_symbol:
         symbol = st.session_state.selected_symbol
         info = stk_group.get_info(symbol)
