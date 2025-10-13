@@ -1,10 +1,10 @@
 import math
 from fractions import Fraction
 import urllib.request
-from proxy_detector import is_running_on_localhost
+from proxy_detector import is_running_on_macos
 
 class MySetts:  # (USTradingTime):
-    use_proxy = is_running_on_localhost()
+    use_proxy = is_running_on_macos()
     
     proxies = urllib.request.getproxies()
     default_proxy = 'http://127.0.0.1:7890'

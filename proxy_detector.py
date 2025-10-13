@@ -1,10 +1,19 @@
 import urllib.request
 import socket
+import platform
+
+def is_running_on_macos():
+    """Check if the operating system is macOS"""
+    try:
+        # Get the current OS name
+        os_name = platform.system().lower()
+        # Check if it contains 'darwin' (macOS internal name)
+        return 'darwin' in os_name
+    except:
+        return False
 
 def is_running_on_localhost():
-    """test if running on（localhost）
-    
-    """
+    """Test if running on localhost"""
     try:
         hostname = socket.gethostname()
         local_ips = ['127.0.0.1', 'localhost']
