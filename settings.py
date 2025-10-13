@@ -4,7 +4,7 @@ import urllib.request
 
 class MySetts:  # (USTradingTime):
     proxies = urllib.request.getproxies()
-    use_proxy = True if proxies else False
+    use_proxy = False #True if proxies else False
     default_proxy = 'http://127.0.0.1:7890'
     yf_proxy = proxies.get('http', default_proxy)
     yfs_proxy = proxies.get('https', yf_proxy)
