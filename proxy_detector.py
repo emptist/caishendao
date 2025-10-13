@@ -1,5 +1,32 @@
 import os
 import urllib.request
+import socket
+
+def is_running_on_localhost():
+    """test if running on（localhost）
+    
+    """
+    try:
+        hostname = socket.gethostname()
+        local_ips = ['127.0.0.1', 'localhost']
+        
+        ip_addresses = socket.gethostbyname_ex(hostname)[2]
+        
+        for ip in ip_addresses:
+            if ip in local_ips:
+                return True
+                
+        server_env_vars = ['SERVER_SOFTWARE', 'DYNO', 'HEROKU_APP_ID', 'AWS_EXECUTION_ENV']
+        for env_var in server_env_vars:
+            if os.environ.get(env_var):
+                return False
+                
+        if os.environ.get('RUNNING_ON_SERVER') == '1':
+            return False
+            
+        return True
+    except:
+        return True
 
 def detect_system_proxy():
     """Detect system proxy settings"""

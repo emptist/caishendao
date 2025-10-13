@@ -1,14 +1,20 @@
 import math
 from fractions import Fraction
 import urllib.request
+from proxy_detector import is_running_on_localhost
 
 class MySetts:  # (USTradingTime):
+    # 检测是否在本地运行（localhost）
+    use_proxy = is_running_on_localhost()
+    
+    # 在本地运行时使用代理，在服务器上运行时不使用代理
+    
+    # 代理配置
     proxies = urllib.request.getproxies()
-    use_proxy = False if proxies else True
     default_proxy = 'http://127.0.0.1:7890'
-    yf_proxy = default_proxy if use_proxy else None  #proxies.get('http', default_proxy)
-    yfs_proxy = default_proxy if use_proxy else None   #proxies.get('https', yf_proxy)
-    yf_socks_proxy = default_proxy if use_proxy else None #proxies.get('socks', default_proxy)
+    yf_proxy = proxies.get('http', default_proxy)
+    yfs_proxy = proxies.get('https', default_proxy)
+    yf_socks_proxy = proxies.get('socks', default_proxy)
 
     ai_provider = "alibabacloud" if use_proxy else "gemini"  # 可选: "gemini", "alibabacloud"
     alibabacloud_api_base = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
