@@ -81,7 +81,7 @@ class StStockGroup(StockGroup):
     clsStockData = StStockData
 
 
-@st.cache_data(ttl=3600)  # 缓存60分钟
+@st.cache_data(ttl=600)
 def set_symbols(type):
     """根据类型获取Stock/ETF代码列表
     
@@ -129,7 +129,7 @@ def set_symbols(type):
 
 
 
-@st.cache_resource(ttl=3600)  # 缓存1小时
+@st.cache_resource(ttl=600)
 def prepare_group(symbols_set, interval, pe_limit):
     """准备Stock组数据
     
