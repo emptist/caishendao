@@ -227,22 +227,11 @@ def build_page():
     # Commented out - this line would reset the selected stock on every page run
     # st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
-    # --- Charting area --- (Now above the table)
-    len_all_intervals = len(stk_group.all_intervals)
-    if st.session_state.selected_symbol:
-        # Always display the chart with the current selected symbol from session state
-        symbol = st.session_state.selected_symbol
-        symbol_info = stk_group.get_longName(symbol)
-        interval = selected_interval
-        q = stk_group.full_dict[symbol].quotes[interval]
-        q.plot_raw_data(
-            symbol, selected_whole_view, selected_y2,
-            length=selected_length,
-            height=selected_height // len_all_intervals - 10,
-            symbol_info=symbol_info
-        )
-    else:
-        st.write('No symbol selected')
+    # Create a placeholder for the chart that will be updated after selection processing
+    chart_placeholder = st.empty()
+
+    # Initialize chart_content with the 'No symbol selected' message
+    chart_content = None
 
     # This is the list of columns we want to display in our table.
     info_columns = [
@@ -358,6 +347,25 @@ def build_page():
             st.session_state.selected_symbol = selected_symbol_from_grid
             # Force rerun to update chart with new selection using Streamlit's proper mechanism
             st.rerun()
+
+    # Now render the chart with the final selected symbol
+    len_all_intervals = len(stk_group.all_intervals)
+    if st.session_state.selected_symbol:
+        # Always display the chart with the current selected symbol from session state
+        symbol = st.session_state.selected_symbol
+        symbol_info = stk_group.get_longName(symbol)
+        interval = selected_interval
+        q = stk_group.full_dict[symbol].quotes[interval]
+        with chart_placeholder:
+            q.plot_raw_data(
+                symbol, selected_whole_view, selected_y2,
+                length=selected_length,
+                height=selected_height // len_all_intervals - 10,
+                symbol_info=symbol_info
+            )
+    else:
+        with chart_placeholder:
+            st.write('No symbol selected')
 
     # --- AI analysis area ---
     if st.session_state.selected_symbol:
