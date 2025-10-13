@@ -150,7 +150,7 @@ def bokeh_draw(
     #        p.add_layout(box)
 
     # if df.smas_up.iloc[-1]:
-    last_ma_bullish = df.smas_up.iloc[-1] & df.cmas_up.iloc[-1]
+    last_ma_bullish = df.avrgs_bull.iloc[-1]
     if last_ma_bullish:
         # if df.sput.iloc[-1]:
         p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
@@ -473,7 +473,7 @@ def bokeh_draw(
         l_text = 'Up Trend Yet'
         l_text_color = 'magenta'
         l_text_y_offset = -30
-    elif ~df.smas_up.iloc[-1] & ~df.cmas_up.iloc[-1]:
+    elif df.avrgs_bear.iloc[-1]:
         l_text = 'Down Trend Yet'
         l_text_color = 'blue'
         l_text_y_offset = 30

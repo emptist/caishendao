@@ -166,9 +166,10 @@ class Quote:
         #print('j not_high:', jnh)
         return jnh & dnh & (dup | kup | mup)
 
-    def key_macma_up(self):
+    
+    def last_avrgs_bull(self):
         df = self.df_predict().df
-        up = df.cmas_up.iloc[-1]
+        up = df.avrgs_bull.iloc[-1]
         #print('final cmas_up: ', up)
         return up #up.iloc[-1]
 
@@ -407,12 +408,9 @@ class StockGroup:
         
         def detecting(q:Quote,symbol=''):
             bias_limit = 15 #3
-            bull_starts = q.bias_not_high(bias_limit) and q.key_macma_up() # and q.j_not_high(j=97,d=95) 
-            # hc_limit = 38
-            # hv_limit = 0.04
-            # bull_starts = bull_starts and q.high_cnst(limit=hc_limit) and q.high_velo(limit=hv_limit)
-            bull_starts = bull_starts and q.high_cnstvelo()
-            return bull_starts
+            #bull_starts =  q.last_avrgs_bull()
+            bull_starts = q.bias_not_high(bias_limit) and q.high_cnstvelo()
+            return bull_starts and (q.buy() or q.sput())
         
         g.find_potential_target(detecting=detecting,srt=None)
     
@@ -455,7 +453,7 @@ class StockGroup:
         g.recollect_dicts()
         
         def detecting(q,symbol=''):
-            return q.j_not_high() and q.key_macma_up() #and q.avrgs_bull() 
+            return q.j_not_high() and q.last_avrgs_bull() #and q.avrgs_bull() 
             #return q.buy()
         
         g.find_potential_target(detecting=detecting,srt=None)
