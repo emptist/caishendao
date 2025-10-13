@@ -1,10 +1,10 @@
 import math
 from fractions import Fraction
-#import urllib.request
+import urllib.request
 
 class MySetts:  # (USTradingTime):
-    #proxies = urllib.request.getproxies()
-    use_proxy = False #True if proxies else False
+    proxies = urllib.request.getproxies()
+    use_proxy = False if proxies else True
     default_proxy = 'http://127.0.0.1:7890'
     yf_proxy = default_proxy if use_proxy else None  #proxies.get('http', default_proxy)
     yfs_proxy = default_proxy if use_proxy else None   #proxies.get('https', yf_proxy)
