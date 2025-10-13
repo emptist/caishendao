@@ -486,7 +486,7 @@ def bokeh_draw(
     label = Label(
         x=df.idx.iloc[1], 
         y=df.close.iloc[-1],  
-        x_offset=10, 
+        x_offset=0.5, 
         y_offset=l_text_y_offset,
         text=l_text,
         # most important font family
