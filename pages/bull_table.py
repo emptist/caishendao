@@ -141,13 +141,16 @@ def prepare_group(symbols_set, interval, pe_limit):
     Returns:
         StStockGroup: 包含指定Stock的StStockGroup实例
     """
+    
+    reserved_set = {'GDX','GDXU','GLD','UGL'}
+
     stk_group = StStockGroup.bull_starting(
-        symbols_set,
+        symbols_set.union(reserved_set),
         init_interval=interval,
         sort_by_interval=interval,
         all_intervals=[interval],
         pe_limit=pe_limit,
-        due_symbols={'GDX','GDXU','GLD','UGL'},
+        due_symbols={},
     )
     return stk_group
 
