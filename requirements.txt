@@ -1,10 +1,40 @@
-yfinance
-vectorbt
-pandas-ta
+# https://robiokidenis.medium.com/how-to-install-multiple-python-on-your-mac-d20713740a2d
+
+setuptools # pandas-ta may need this
+# matplotlib # No direct imports found in actual/
+holidays
+pytz # time zone lib
+yfinance # needed by pandas-ta
+vectorbt # pandas-ta could use this
+# pip install -U "vectorbt[full]" to install all potential dependences
+
+#pandas-ta may have a bug when import numpy.NaN, change it to import numpy.nan will solve the bug
+pandas-ta 
+
+#ibis-framework[duckdb.examples]
+
+ib_async
+backtesting
+caffeine
+# https://github.com/bokeh/tutorial/tree/main/notebooks
+# https://www.youtube.com/watch?v=G0Yc3ck4lC8
 bokeh
 streamlit
 streamlit-aggrid
-google-generativeai>=0.3.0
-requests
-watchdog
-streamlit-js-eval
+watchdog 
+# watchdog is used by streamlit at runtime
+
+#guitk
+# https://pypi.org/project/auto-py-to-exe/
+#auto-py-to-exe
+#streamlit_extras
+#mibian # a lib for options calculatings
+
+#mplfinance
+#hvplot # can utilize bokeh(default)/plotly
+#plotly
+#cufflinks
+#finnhub-python
+# lumibot # 
+google-generativeai
+

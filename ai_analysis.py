@@ -26,7 +26,7 @@ def st_ai_analysis_area(symbol, info, ai_provider, session_state):
 
         # Show the button only if analysis has not been triggered for the current symbol
         if not session_state.show_ai_analysis.get(symbol, False):
-            if st.button(f"AI analysis for {symbol}"):
+            if st.button(f"Trigger AI analysis for {symbol}"):
                 # When clicked, set the state for the symbol to True and rerun
                 session_state.show_ai_analysis[symbol] = True
                 st.rerun()

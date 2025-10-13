@@ -2,6 +2,7 @@
 # pandas-ta https://pub.towardsai.net/technical-analysis-with-python-quickstart-guide-for-pandas-ta-fe4b152e95a2
 
 import warnings
+from settings import MySetts
 
 # 输入验证函数，防止路径遍历攻击
 def validate_user_input(input_str, allowed_chars=None):
@@ -184,20 +185,7 @@ class Quote:
 
     def high_cnstvelo(self,limit=4):
         v = self.cnstvelo_value()
-        match self.interval:
-            case '1h':
-                limit = limit/20
-            case '1d':
-                limit = limit
-            case '1w':
-                limit = limit*5
-            case '1mo':
-                limit = limit*20
-            case '3mo':
-                limit = limit*60
-            case _:
-                limit = limit
-        result = v >= limit
+        result = v >= (limit * MySetts.equivalence_to_days(self.interval))
         return result
 
     def cnstvelo_value(self):
@@ -220,20 +208,7 @@ class Quote:
 
     def high_velo(self,limit=0.1):
         v = self.velo_value() 
-        match self.interval:
-            case '1h':
-                limit = limit/20
-            case '1d':
-                limit = limit
-            case '1w':
-                limit = limit*5
-            case '1mo':
-                limit = limit*20
-            case '3mo':
-                limit = limit*60
-            case _:
-                limit = limit
-        result = v >= limit
+        result = v >= (limit * MySetts.equivalence_to_days(self.interval))
         return result
 
     def velo_value(self):
