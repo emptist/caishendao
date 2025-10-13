@@ -384,8 +384,9 @@ class StockGroup:
             symbols = [symbol for symbol in symbols if symbol not in ignoreds]
         return symbols
 
+    # except for ETNs, so we use ' ETN'
     @classmethod
-    def bull_starting(cls,symbols,init_interval='1d',sort_by_interval='1d',all_intervals=['1d'],pe_limit=None,top_n=None,ignoreds={},due_symbols={},name_except=' ETN '):
+    def bull_starting(cls,symbols,init_interval='1d',sort_by_interval='1d',all_intervals=['1d'],pe_limit=None,top_n=None,ignoreds={},due_symbols={},name_except=' ETN'):
         g = cls.trade_group(
             symbols=symbols.union(due_symbols),
             init_interval=init_interval,
