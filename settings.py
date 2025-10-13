@@ -4,12 +4,8 @@ import urllib.request
 from proxy_detector import is_running_on_localhost
 
 class MySetts:  # (USTradingTime):
-    # 检测是否在本地运行（localhost）
     use_proxy = is_running_on_localhost()
     
-    # 在本地运行时使用代理，在服务器上运行时不使用代理
-    
-    # 代理配置
     proxies = urllib.request.getproxies()
     default_proxy = 'http://127.0.0.1:7890'
     yf_proxy = proxies.get('http', default_proxy)
@@ -19,9 +15,8 @@ class MySetts:  # (USTradingTime):
     ai_provider = "alibabacloud" if use_proxy else "gemini"  # 可选: "gemini", "alibabacloud"
     alibabacloud_api_base = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
     
-    # AI分析缓存设置
     n_hour = 48
-    ai_analysis_cache_ttl_seconds = 3600 * n_hour  # n_hour 小时缓存时间限制
+    ai_analysis_cache_ttl_seconds = 3600 * n_hour  # n_hour
 
     hour_bars_per_day = 17  # 9 # use half of total: 25 in Futu, 17 in YF
     
