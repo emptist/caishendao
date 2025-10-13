@@ -1,14 +1,14 @@
 import math
 from fractions import Fraction
-import urllib.request
+#import urllib.request
 
 class MySetts:  # (USTradingTime):
-    proxies = urllib.request.getproxies()
+    #proxies = urllib.request.getproxies()
     use_proxy = False #True if proxies else False
     default_proxy = 'http://127.0.0.1:7890'
-    yf_proxy = proxies.get('http', default_proxy)
-    yfs_proxy = proxies.get('https', yf_proxy)
-    yf_socks_proxy = proxies.get('socks', default_proxy)
+    yf_proxy = default_proxy if use_proxy else None  #proxies.get('http', default_proxy)
+    yfs_proxy = default_proxy if use_proxy else None   #proxies.get('https', yf_proxy)
+    yf_socks_proxy = default_proxy if use_proxy else None #proxies.get('socks', default_proxy)
 
     ai_provider = "alibabacloud" if use_proxy else "gemini"  # 可选: "gemini", "alibabacloud"
     alibabacloud_api_base = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
