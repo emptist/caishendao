@@ -5,7 +5,7 @@ from proxy_detector import is_running_on_macos
 
 class MySetts:  # (USTradingTime):
     proxies = urllib.request.getproxies()
-    use_proxy = True if proxies else False
+    use_proxy = proxies or is_running_on_macos()
     
     default_proxy = 'http://127.0.0.1:7890'
     yf_proxy = proxies.get('http', default_proxy)
