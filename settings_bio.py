@@ -1,17 +1,3 @@
-#settings_bio.py
-
-# import pandas as pd
-
-# df = pd.read_csv('bio.csv', sep='\t', encoding='utf-16')
-
-# # Now you can work with your dataframe
-# df['ratio'] = df.ratio.str.rstrip('%')
-# df['ratio'] = pd.to_numeric(df.ratio,errors='coerce')
-# #print(df.ratio.head())
-
-# list = df[(df.ratio > 4.99)]['Symbol'].to_list()
-# # Access a specific column
-# #print(set(list))
 
 bios = {
     'IONS', 'ONC', 'IFRX', 'NRXP', 'YDES', 
