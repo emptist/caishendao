@@ -216,22 +216,21 @@ def build_page():
 
     # This needs to be done *before* the selectbox for selected_symbol is rendered
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
-    st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-    #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
+    
+    # 只在第一次加载页面或没有选中的股票时设置默认值，避免覆盖用户的选择
+    if 'selected_symbol' not in st.session_state or st.session_state.selected_symbol is None:
+        st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    # 确保选中的股票仍然在当前列表中
+    elif st.session_state.selected_symbol not in symbol_list:
+        st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    
+    # 注释掉这行，因为它会在每次页面运行时重置选中的股票
+    # st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
-    # Initialize or get the selected symbol from session state
-    # if 'selected_symbol' not in st.session_state:
-    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-
-    # # Ensure the selected symbol is still in the current list
-    # if st.session_state.selected_symbol not in symbol_list:
-    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-
-
+    # --- Charting area --- (Now above the table)
     len_all_intervals = len(stk_group.all_intervals)
-    # If a symbol is selected (either from the dropdown or the grid), draw the chart
     if st.session_state.selected_symbol:
-        # --- Charting area ---
+        # Always display the chart with the current selected symbol from session state
         symbol = st.session_state.selected_symbol
         symbol_info = stk_group.get_longName(symbol)
         interval = selected_interval
@@ -244,7 +243,6 @@ def build_page():
         )
     else:
         st.write('No symbol selected')
-
 
     # This is the list of columns we want to display in our table.
     info_columns = [
@@ -271,6 +269,8 @@ def build_page():
     ]
 
     group_info = stk_group.info
+    selected_rows_data = None
+    
     if group_info and symbol_list:
         # Use the new method to get a filtered dataframe
         df = stk_group.get_filtered_info_df(symbol_list, columns=info_columns)
@@ -295,10 +295,6 @@ def build_page():
         df.reset_index(inplace=True)
         df.rename(columns={'index': 'symbol'}, inplace=True)
 
-        # Sort by number of analyst opinions
-        #if 'numberOfAnalystOpinions' in df.columns:
-        #    df.sort_values('numberOfAnalystOpinions', ascending=False, inplace=True, na_position='last')
-        
         # sort by cnstvelo
         df.sort_values('cnstvelo', ascending=False, inplace=True, na_position='last')
 
@@ -319,7 +315,8 @@ def build_page():
         gb.configure_selection(
             'single',
             use_checkbox=False,
-            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
+            # Pre-select the row that matches the current selected_symbol
+            pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] 
         )
         # Configure default columns with width constraints
         gb.configure_default_column(
@@ -329,13 +326,9 @@ def build_page():
             sortable=True, 
             resizable=True, 
             filterable=True,
-            #domLayout=['autoHeight','autoSize'],
         )
 
         gridOptions = gb.build()
-
-        # Removed autoSizeStrategy to use fixed widths for better control
-        # gridOptions['autoSizeStrategy'] = {'type': 'fitCellContents'}
 
         # Display the grid
         grid_response = AgGrid(
@@ -345,25 +338,28 @@ def build_page():
             update_mode=GridUpdateMode.SELECTION_CHANGED,
             data_return_mode=DataReturnMode.AS_INPUT,
             width='100%',
-            allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
+            allow_unsafe_jscode=True,
             enable_enterprise_modules=False,
-            key='stock_grid' # Add a key to avoid recreation issues
+            key='stock_grid'
         )
 
-        # If a new row is selected in the grid, update the selected_symbol
-        # and rerun the script to update the chart
-        selected_rows = grid_response['selected_rows']
-        if selected_rows is not None:
-            if not selected_rows.empty and selected_rows.iloc[0]['symbol'] != st.session_state.selected_symbol:
-                st.session_state.selected_symbol = selected_rows.iloc[0]['symbol']
+        # Store selected rows data for later use
+        selected_rows_data = grid_response['selected_rows']
 
     elif symbol_list:
         st.write(symbol_list)
     else:
         st.write("No stocks found matching the criteria.")
 
+    # Update session state with selected symbol from grid
+    if selected_rows_data is not None and not selected_rows_data.empty:
+        selected_symbol_from_grid = selected_rows_data.iloc[0]['symbol']
+        if selected_symbol_from_grid != st.session_state.selected_symbol:
+            st.session_state.selected_symbol = selected_symbol_from_grid
+            # Force rerun to update chart with new selection using Streamlit's proper mechanism
+            st.rerun()
+
     # --- AI analysis area ---
-    # If a symbol is selected (either from the dropdown or the grid), draw the chart
     if st.session_state.selected_symbol:
         symbol = st.session_state.selected_symbol
         info = stk_group.get_info(symbol)
