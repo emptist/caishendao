@@ -365,6 +365,7 @@ def build_page():
     # --- AI analysis area ---
     # If a symbol is selected (either from the dropdown or the grid), draw the chart
     if st.session_state.selected_symbol:
+        symbol = st.session_state.selected_symbol
         info = stk_group.get_info(symbol)
         st_ai_analysis_area(symbol,info,ai_provider, session_state=st.session_state)
 
