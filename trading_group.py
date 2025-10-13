@@ -382,8 +382,8 @@ class StockGroup:
     def include_symbols(cls,symbols,ignoreds={}):
         if symbols:    
             ignoreds = cls.EXCLUDES.union(ignoreds)
-            symbols = [symbol for symbol in symbols if symbol not in ignoreds]
-        return set(symbols)
+            symbols = {symbol for symbol in symbols if symbol not in ignoreds}
+        return symbols
 
     # except for ETNs, so we use ' ETN'
     @classmethod
