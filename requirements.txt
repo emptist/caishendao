@@ -36,5 +36,7 @@ watchdog
 #cufflinks
 #finnhub-python
 # lumibot # 
-google-generativeai
 
+google-generativeai>=0.3.0
+requests
+streamlit-js-eval
