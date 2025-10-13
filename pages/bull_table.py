@@ -130,14 +130,13 @@ def set_symbols(type):
 
 
 @st.cache_resource(ttl=3600)  # 缓存1小时
-def prepare_group(symbols_set, interval, pe_limit, gists=True):
+def prepare_group(symbols_set, interval, pe_limit):
     """准备Stock组数据
     
     Args:
         symbols_set (set): Stock代码集合，用于缓存健壮性
         interval (str): 时间间隔
         pe_limit (int): 市盈率限制
-        gists (bool): 是否使用gists
         
     Returns:
         StStockGroup: 包含指定Stock的StStockGroup实例
@@ -149,7 +148,6 @@ def prepare_group(symbols_set, interval, pe_limit, gists=True):
         all_intervals=[interval],
         pe_limit=pe_limit,
         due_symbols={},
-        gists=gists
     )
     return stk_group
 
@@ -211,7 +209,7 @@ def build_page():
 
     symbols = set_symbols(type=selected_type)
     pe_limit = BullTableSettings.default_pe_limit if selected_type == 'Stocks' else None
-    stk_group = prepare_group(symbols, interval=selected_interval, pe_limit=pe_limit) #, gists=selected_type=='Gists')
+    stk_group = prepare_group(symbols, interval=selected_interval, pe_limit=pe_limit)
 
     # This needs to be done *before* the selectbox for selected_symbol is rendered
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)

@@ -55,11 +55,10 @@ from toolfuncs import dfs_for_interval,get_pe,tidy_yf_df,predicted,final_sma_ser
 
 
 class Quote:
-    def __init__(self,interval,df,gists=True):
+    def __init__(self,interval,df):
         self.interval = interval
         self.df = df
         self.df_predicted = False
-        self.gists = gists
 
     #def __dir__(self):
     #    return f'interval: {self.interval} df: {self.df.shape}'
@@ -70,7 +69,7 @@ class Quote:
 
     def df_predict(self):
         if self.df_predicted == False:
-            self.df = predicted(self.df, self.interval,gists=self.gists)
+            self.df = predicted(self.df, self.interval)
             self.df_predicted = True
         return self
 
@@ -268,7 +267,6 @@ class Quote:
     
     def final_smas_up(self):
         up = final_sma_series_up(self.df,self.interval)
-        #print(f'gists: {self.gists} final_smas_up: {up}')
         return up
     
     def lrows7_not_zero(self):
@@ -297,7 +295,7 @@ class StockData:
 
 
 
-    def detect_potential(self,stk_group,detecting,pe_limit=None,key_interval=None,gists=True):
+    def detect_potential(self,stk_group,detecting,pe_limit=None,key_interval=None):
         working_interval = stk_group.init_interval if key_interval is None else key_interval
         if self.quotes.__contains__(working_interval):
             if (pe_limit is not None) and self.pe_ratio > pe_limit:
@@ -305,7 +303,6 @@ class StockData:
             #print(f'symbol: {self.symbol} items: {self.quotes}')
             #print(f'***** debug before detecting {self.symbol}')
             q = self.quotes[working_interval]
-            q.gists = gists
             length = len(q.df)
             if (length > 1) and q.amount_suitable() and detecting(q,self.symbol):
                 stk_group.move_to_potentials(self)
@@ -388,7 +385,7 @@ class StockGroup:
         return symbols
 
     @classmethod
-    def bull_starting(cls,symbols,init_interval='1d',sort_by_interval='1d',all_intervals=['1d'],pe_limit=None,top_n=None,ignoreds={},due_symbols={},gists=True):
+    def bull_starting(cls,symbols,init_interval='1d',sort_by_interval='1d',all_intervals=['1d'],pe_limit=None,top_n=None,ignoreds={},due_symbols={},name_except=' ETN '):
         g = cls.trade_group(
             symbols=symbols.union(due_symbols),
             init_interval=init_interval,
@@ -396,13 +393,14 @@ class StockGroup:
             all_intervals=all_intervals,
             pe_limit=pe_limit,
             due_symbols=due_symbols,
+            name_except=name_except,
         )
         def detecting(q,symbol=''):
             up = q.final_smas_up()
             #print(f'final_smas_up: {up}')
             return up
             
-        g.find_potential_target(detecting=detecting,srt=None,gists=gists)
+        g.find_potential_target(detecting=detecting,srt=None)
         
         g.recollect_dicts()
         
@@ -415,7 +413,7 @@ class StockGroup:
             bull_starts = bull_starts and q.high_cnstvelo()
             return bull_starts
         
-        g.find_potential_target(detecting=detecting,srt=None,gists=gists)
+        g.find_potential_target(detecting=detecting,srt=None)
     
 
         for interval in all_intervals:
@@ -515,9 +513,9 @@ class StockGroup:
 
 
     @classmethod
-    def trade_group(cls,symbols,init_interval,sort_by_interval=None,all_intervals=None,pe_limit=None,due_symbols={}):
+    def trade_group(cls,symbols,init_interval,sort_by_interval=None,all_intervals=None,pe_limit=None,due_symbols={},name_except='Bond'):
         stk_group = cls(init_interval,sort_by_interval,all_intervals=all_intervals,pe_limit=pe_limit,due_symbols=due_symbols)
-        stk_group.init_stockdata_dict(symbols,name_except='Bond')
+        stk_group.init_stockdata_dict(symbols,name_except=name_except)
         return stk_group
 
 
@@ -680,8 +678,8 @@ class StockGroup:
             if symbols is None:
                 symbols = self.stockdata_dict.keys()
         
-        # 为股票代码定义允许的字符集（只允许字母、数字、点和连字符）
-        symbol_pattern = r'^[a-zA-Z0-9.-]+$'
+        # 为股票代码定义允许的字符集（只允许字母、数字、点和连字符and ^）
+        symbol_pattern = r'^[a-zA-Z0-9.-^]+$'
 
         for interval in self.all_intervals:
             if base_group and (interval in base_group.all_intervals):
@@ -707,10 +705,11 @@ class StockGroup:
                 
                 if symbol in column_names:
                     df = dfs[symbol]
-                    if withInfo and name_except:
-                        long_name = self.get_longName(symbol=symbol)
-                        if name_except in long_name:
-                            continue
+                    if withInfo:
+                        if name_except:
+                            long_name = self.get_longName(symbol=symbol)
+                            if name_except in long_name:
+                                continue
 
                     if not self.stockdata_dict.__contains__(symbol):
                         pe_ratio = get_pe(symbol)
@@ -796,14 +795,14 @@ class StockGroup:
         return filtered_df
     
     
-    def find_potential_target(self,detecting,srt=None,key_interval=None,gists=True):
+    def find_potential_target(self,detecting,srt=None,key_interval=None):
         # loop through all stockdata instances
         keys = self.stockdata_dict.keys()
         # it needs to convert to list here to avoid the 
         # "dictionary changed size during iteration" error
         for symbol in list(keys):
             #print(f'***** find potential_target debug {symbol}')
-            self.stockdata_dict[symbol].detect_potential(stk_group=self,detecting=detecting,pe_limit=self.pe_limit,key_interval=key_interval,gists=gists)
+            self.stockdata_dict[symbol].detect_potential(stk_group=self,detecting=detecting,pe_limit=self.pe_limit,key_interval=key_interval)
 
         if srt is not None:
             self.sort_potentials(srt)

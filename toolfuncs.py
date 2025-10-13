@@ -586,14 +586,14 @@ def df_prepare(df,interval):
 
 
 
-def predicted(df,interval,fully=True,gists=True):
+def predicted(df,interval,fully=True):
     df = df_prepare(df,interval)
     # this part is not yet that useful
     prd_kdj = False
     if prd_kdj:
         df = predict_kdj(df,interval)
-
-    df = set_entries(df,interval,gists=gists)
+        
+    df = set_entries(df,interval)
     df = refine_columns_for_backtesting(df)
 
     if fully == True:
@@ -627,10 +627,10 @@ def predict_kdj(df,interval):
     predict_dl(df)
     return df
 
-def set_entries(df,interval,gists=True):
+def set_entries(df,interval):
     # must set opt entries first
-    set_opt_entries(df,interval,gists=gists)
-    set_etf_entries(df,interval,gists=gists)
+    set_opt_entries(df,interval)
+    set_etf_entries(df,interval)
     #display(df.loc[(df.dl > 0) | (df.dh > 0),['dl','dh']])
     return df
     
@@ -853,7 +853,7 @@ def consoling_sma(df,x):
 # utilize bull/bear etfs to focus on a bull market of underline, whether it be, say, TQQQ or SQQQ, etc.
 # entries are for short on options only
 # everything simplified
-def set_opt_entries(df,interval,gists=True):
+def set_opt_entries(df,interval):
     """
         
         KEY TO TREND DRIVE TRADING
@@ -882,7 +882,7 @@ def set_opt_entries(df,interval,gists=True):
 
 
 
-def set_etf_entries(df,interval,gists=True):
+def set_etf_entries(df,interval):
     '''
         filter option entries to get etf entries
         more stict than conditions for buy/sell options
