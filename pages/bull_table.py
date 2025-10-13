@@ -216,6 +216,7 @@ def build_page():
 
     # This needs to be done *before* the selectbox for selected_symbol is rendered
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
+    
     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
     
     len_all_intervals = len(stk_group.all_intervals)
