@@ -12,7 +12,7 @@ class MySetts:  # (USTradingTime):
     yfs_proxy = proxies.get('https', default_proxy)
     yf_socks_proxy = proxies.get('socks', default_proxy)
 
-    ai_provider = "alibabacloud" if use_proxy else "gemini"  # 可选: "gemini", "alibabacloud"
+    ai_provider = "alibabacloud" if use_proxy else "gemini"
     alibabacloud_api_base = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
     
     n_hour = 48
