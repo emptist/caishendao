@@ -1,4 +1,3 @@
-import os
 import urllib.request
 import socket
 
@@ -15,18 +14,11 @@ def is_running_on_localhost():
         for ip in ip_addresses:
             if ip in local_ips:
                 return True
-                
-        server_env_vars = ['SERVER_SOFTWARE', 'DYNO', 'HEROKU_APP_ID', 'AWS_EXECUTION_ENV']
-        for env_var in server_env_vars:
-            if os.environ.get(env_var):
-                return False
-                
-        if os.environ.get('RUNNING_ON_SERVER') == '1':
-            return False
-            
-        return True
+                    
+        return False
+
     except:
-        return True
+        return False
 
 def detect_system_proxy():
     """Detect system proxy settings"""
@@ -52,33 +44,6 @@ def detect_system_proxy():
         return None
 
 
-def another_approach():
-    print("another_approach")
-    
-    """Another approach to detect system proxy settings"""
-    try:
-        # Get system proxy settings from environment variables
-        http_proxy = os.environ.get('http_proxy')
-        https_proxy = os.environ.get('https_proxy')
-        all_proxy = os.environ.get('all_proxy')
-        ALL_PROXY = os.environ.get('ALL_PROXY')
-
-        # Check for http proxy
-        if http_proxy:
-            return http_proxy
-        # Check for https proxy
-        elif https_proxy:
-            return https_proxy
-        # Check for all_proxy
-        elif all_proxy:
-            return all_proxy
-        # Check for ALL_PROXY
-        elif ALL_PROXY:
-            return ALL_PROXY
-        return None
-    except Exception as e:
-        print(e)
-        return None
 
 def third_approach():
     proxies = urllib.request.getproxies()
