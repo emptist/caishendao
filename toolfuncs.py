@@ -17,8 +17,8 @@ import yfinance as yf
 
 import warnings
 from settings import MySetts
-yf_proxy = MySetts.yf_proxy
-if yf_proxy is not None:
+if MySetts.use_proxy:
+    yf_proxy = MySetts.yf_proxy
     yf.set_config(proxy=yf_proxy)
     warnings.warn(f'proxy setting to {yf_proxy} for {yf.YfData}',stacklevel=4)
 
