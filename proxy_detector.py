@@ -1,5 +1,4 @@
 import urllib.request
-import socket
 import platform
 
 def is_running_on_macos():
