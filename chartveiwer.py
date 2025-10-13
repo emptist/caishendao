@@ -68,7 +68,7 @@ info, left_df, right_df = load_data(selected_stock,interval=interval,period=peri
 
 def plot_raw_data(df,interval,whole_view):
     #print(df.shape)
-    if len(df) > 1:
+    if len(df) > 1 and hasattr(df, 'j'):
         try:
             longName = info['longName']
         except Exception as e:

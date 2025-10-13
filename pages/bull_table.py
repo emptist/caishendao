@@ -52,7 +52,7 @@ class StQuote(Quote):
     def plot_raw_data(self,symbol,whole_view,in_y2,length,height,symbol_info):
         #min(selected_length,len(df)-1)
         df = self.df[-length:]
-        if len(df) < 1:
+        if len(df) < 1 or not hasattr(df, 'j'):
             #spinner_text.text(f'No df of {symbol}')
             return
 
