@@ -464,30 +464,30 @@ def bokeh_draw(
     if df.sell.iloc[-1] | df.scall.iloc[-1]:
         l_text = 'SELL'
         l_text_color = 'red'
-        l_text_y_offset = -30
+        #l_text_y_offset = -30
     elif df.buy.iloc[-1] | df.sput.iloc[-1]:
         l_text = 'BUY'
         l_text_color = 'green'
-        l_text_y_offset = 30
+        #l_text_y_offset = 30
     elif last_ma_bullish:
         l_text = 'Up Trend Yet'
         l_text_color = 'magenta'
-        l_text_y_offset = -30
+        #l_text_y_offset = -30
     elif df.avrgs_bear.iloc[-1]:
         l_text = 'Down Trend Yet'
         l_text_color = 'blue'
-        l_text_y_offset = 30
+        #l_text_y_offset = 30
     else:
         l_text = 'DUBIOUS'
         l_text_color = 'gray'
-        l_text_y_offset = 0
+        #l_text_y_offset = 0
     
     
     label = Label(
         x=df.idx.iloc[1], 
         y=df.close.iloc[-1],  
         x_offset=10, 
-        y_offset=l_text_y_offset,
+        y_offset=0,#l_text_y_offset,
         text=l_text,
         # most important font family
         text_font= 'courier', #'sans-serif',
