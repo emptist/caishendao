@@ -368,7 +368,7 @@ class StockGroup:
     sort_by_interval = long_interval #if \
     #(datetime.now(USTradingTime.eastern).time().hour > 9) else middle_interval
         
-    EXCLUDES = {}
+    EXCLUDES = set()
 
     @classmethod
     def get_long_name(cls, tickers, symbol):#not used
