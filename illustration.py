@@ -467,7 +467,7 @@ def bokeh_draw(
         l_text_y_offset = 20
     elif df.buy.iloc[-1] | df.sput.iloc[-1]:
         l_text = f'{symbol}: BUY'
-        l_text_color = 'green'
+        l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:
         l_text = f'{symbol}: Trending Up'
@@ -475,7 +475,7 @@ def bokeh_draw(
         l_text_y_offset = -20
     elif df.avrgs_bear.iloc[-1]:
         l_text = f'{symbol}: Trending Down'
-        l_text_color = 'blue'
+        l_text_color = 'green'
         l_text_y_offset = 20
     else:
         l_text = f'{symbol}: DUBIOUS'
