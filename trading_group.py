@@ -730,8 +730,8 @@ class StockGroup:
                 self.info[key] = {}
     
     def get_longName(self,symbol):
+        return (self.info[symbol].get('longName', '') if isinstance(self.info, dict) and symbol in self.info else getattr(getattr(self.info, symbol, None), 'longName', '')) if self.info else ''
         #print(f'**** debug [{symbol}] **** type is: {type(self.info[symbol])}')
-        return self.info[symbol]['longName'] if self.info and self.info[symbol] and 'longName' in self.info[symbol] else ''
 
     def get_info(self,symbol):
         #print(f'**** debug [{symbol}] **** type is: {type(self.info[symbol])}')
