@@ -26,7 +26,7 @@ st.sidebar.header('View Chart')
 
 #START = '2015-01-01'
 #TODAY = date.today().strftime('%Y-%m-%d')
-intervals = ['1h', '30m', '15m', '5m', '1d', '1wk', '1mo', '3mo',] # '1m', '2m', '60m', '5d', ] #, '90m'
+intervals = ['1mo', '1wk', '1d', '1h', '30m', '15m', '5m', '3mo',] # '1m', '2m', '60m', '5d', ] #, '90m'
 col1, col2, col3, col4, col5, col6= st.columns(6)
 
 # with col1:
@@ -47,7 +47,8 @@ with col1:
     # Add AI Provider selection
     ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])
 with col6:
-    selected_stock = st.text_input('Symbol','SHLD').upper()
+    symbol = st.session_state.get('selected_symbol','SHLD')
+    selected_stock = st.text_input('Symbol',symbol).upper()
 
 @st.cache_data  
 def load_data(symbol,interval,period,fully=True):
