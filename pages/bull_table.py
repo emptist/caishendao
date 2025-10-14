@@ -170,6 +170,8 @@ def build_page():
 
     # This needs to be done *before* the selectbox for selected_symbol is rendered
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
+    
+    # NOTE: The first symbol in the list should be selected each time the page is reloaded
     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
     #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
 
@@ -256,7 +258,7 @@ def build_page():
         gb.configure_selection(
             'single',
             use_checkbox=False,
-            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
+            pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
         )
         # Configure default columns with width constraints
         gb.configure_default_column(
@@ -284,7 +286,9 @@ def build_page():
             width='100%',
             allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
             enable_enterprise_modules=False,
-            key='stock_grid' # Add a key to avoid recreation issues
+            key='stock_grid', # Add a key to avoid recreation issues
+            show_search=False,
+            #callback=lambda x: st.write(x) # don't forget we can use callback
         )
 
         # If a new row is selected in the grid, update the selected_symbol
