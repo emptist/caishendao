@@ -259,7 +259,7 @@ def build_page():
         gb.configure_selection(
             'single',
             use_checkbox=False,
-            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row, but could cause slow down?
+            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
         )
         # Configure default columns with width constraints
         gb.configure_default_column(
@@ -319,7 +319,7 @@ def build_page():
                 # Directly update the chart without full rerun
                 # The chart will update automatically on the next render cycle
                 # without the overhead of a complete page rerun
-                st.rerun()
+                # st.rerun()
                 
     elif symbol_list:
         st.write(symbol_list)
