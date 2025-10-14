@@ -183,7 +183,7 @@ class Quote:
         p = (df.close.iloc[-1]/df.close.iloc[-2]-1)*100
         return round(p, 2)
 
-    def high_cnstvelo(self,limit=4):
+    def high_cnstvelo(self,limit=3):
         v = self.cnstvelo_value()
         result = v >= (limit * MySetts.equivalence_to_days(self.interval))
         return result
@@ -194,7 +194,7 @@ class Quote:
         #print(f'cnstvelo_value: {cnstvelo}')
         return cnstvelo
 
-    def high_cnst(self,limit=40):
+    def high_cnst(self,limit=50):
         v = self.cnst_value() 
         result = v >= limit
         return result
@@ -411,7 +411,7 @@ class StockGroup:
         def detecting(q:Quote,symbol=''):
             bias_limit = 15 #3
             #bull_starts =  q.last_avrgs_bull()
-            bull_starts = q.bias_not_high(bias_limit) and q.high_cnstvelo()
+            bull_starts = q.bias_not_high(bias_limit) and (q.high_cnstvelo() or q.high_cnst())
             return bull_starts and (q.buy() or q.sput())
         
         g.find_potential_target(detecting=detecting,srt=None)
