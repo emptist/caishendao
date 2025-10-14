@@ -33,7 +33,8 @@ st.sidebar.header('Bulls Detector')
 
 # bull_table应用专用配置
 class BullTableSettings:
-    stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
+    #stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
+    stock_types = ['Indices','Bios','Gists','Simple']
     intervals = ['1h','30m','15m','1d','1wk','1mo']
     filters = ['All','Foot','Fork','Leap','Potential','sput','buy','sell','scall','cmas_up','breakm','watch','maGood','<BBM','>=BBM','<bb4l','<bb6l','<bbl','<cmal', '<7', '>=7', 'DonJ', 'JonD']
     indicators = ['none','consis','both','kdj','bias']
@@ -75,39 +76,40 @@ class StStockGroup(StockGroup):
 @st.cache_data(ttl=600)
 def set_symbols(type):
     
-    if type == 'Simple':
-        symbols = MyFavorites.pick_ups
-    elif type == 'Indices':
+    if type == 'Indices':
         symbols = MyFavorites.indices
     elif type == 'Bios':
         symbols = MyFavorites.bios
-    elif type == 'Pairs':
-        symbols = MyFavorites.pairs
-    elif type == 'NS100':
-        symbols = MyFavorites.ns100
-    elif type == 'SP500':
-        symbols = MyFavorites.spy500stks
-    elif type == 'Favors':
-        symbols = MyFavorites.favors
     elif type == 'Gists':
         symbols = MyFavorites.gists
-    elif type == 'Rally':
-        symbols = MyFavorites.now_down
-    elif type == 'Pool':
-        symbols = MyFavorites.bull_pool
-    elif type == 'Top_SP':
-        #symbols = MyFavorites.bull_sp
-        symbols = MyFavorites.top_sp
-    elif type == 'ETF':
-        actives = get_symbols('active etfs')
-        print(len(actives),actives)
-        trends = get_symbols('trending etfs')
-        symbols = set(actives+trends)
-    elif type == 'Stock':
-        actives = get_symbols('active stocks')
-        print(len(actives),actives)
-        trends = get_symbols('trending stocks')
-        symbols = set(actives+trends)
+    elif type == 'Simple':
+        symbols = MyFavorites.pick_ups
+
+    # elif type == 'Pairs':
+    #     symbols = MyFavorites.pairs
+    # elif type == 'NS100':
+    #     symbols = MyFavorites.ns100
+    # elif type == 'SP500':
+    #     symbols = MyFavorites.spy500stks
+    # elif type == 'Favors':
+    #     symbols = MyFavorites.favors
+    # elif type == 'Rally':
+    #     symbols = MyFavorites.now_down
+    # elif type == 'Pool':
+    #     symbols = MyFavorites.bull_pool
+    # elif type == 'Top_SP':
+    #     #symbols = MyFavorites.bull_sp
+    #     symbols = MyFavorites.top_sp
+    # elif type == 'ETF':
+    #     actives = get_symbols('active etfs')
+    #     print(len(actives),actives)
+    #     trends = get_symbols('trending etfs')
+    #     symbols = set(actives+trends)
+    # elif type == 'Stock':
+    #     actives = get_symbols('active stocks')
+    #     print(len(actives),actives)
+    #     trends = get_symbols('trending stocks')
+    #     symbols = set(actives+trends)
     return symbols
 
 
