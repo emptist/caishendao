@@ -34,7 +34,7 @@ st.sidebar.header('Bulls Detector')
 # bull_table应用专用配置
 class BullTableSettings:
     stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
-    intervals = ['1d','1h','30m','15m','1wk','1mo']
+    intervals = ['1h','30m','15m','1d','1wk','1mo']
     filters = ['All','Foot','Fork','Leap','Potential','sput','buy','sell','scall','cmas_up','breakm','watch','maGood','<BBM','>=BBM','<bb4l','<bb6l','<bbl','<cmal', '<7', '>=7', 'DonJ', 'JonD']
     indicators = ['none','consis','both','kdj','bias']
     display_lengths = [150,300,600,1200,2400,4800,9600]
