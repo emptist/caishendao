@@ -259,7 +259,7 @@ def build_page():
         gb.configure_selection(
             'single',
             use_checkbox=False,
-            pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
+            #pre_selected_rows= [i for i, sym in enumerate(df['symbol']) if sym == st.session_state.selected_symbol] # Pre-select the row
         )
         # Configure default columns with width constraints
         gb.configure_default_column(
