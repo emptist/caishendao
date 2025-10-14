@@ -410,10 +410,11 @@ class StockGroup:
         
         def detecting(q:Quote,symbol=''):
             bias_limit = 15 #3
-            #bull_starts =  q.last_avrgs_bull()
-            bull_starts = q.bias_not_high(bias_limit) and (q.high_cnstvelo() or q.high_cnst())
+            bull_starts = q.bias_not_high(bias_limit) 
+            # no more detects needed since we directly detect buy or sput
+            #bull_starts = q.bias_not_high(bias_limit) and (q.high_cnstvelo() or q.high_cnst())
             return bull_starts and (q.buy() or q.sput())
-        
+
         g.find_potential_target(detecting=detecting,srt=None)
     
 
