@@ -720,17 +720,38 @@ class StockGroup:
         return self
 
 
-    def set_info(self,tickers):
+    # def set_info(self,tickers):
+    #     self.info = {}
+    #     for key, value in tickers.items(): #.keys(): #['TQQQ'].info
+    #         try:
+    #             self.info[key] = value.info
+    #         except Exception as e:
+    #             print(f'*** debug {key} error: {e} ticker info: {value.info}') # value.__dict__
+    #             self.info[key] = {}
+    
+    def set_info(self, tickers):
         self.info = {}
-        for key, value in tickers.items(): #.keys(): #['TQQQ'].info
+        # 检查tickers是否为可迭代对象
+        if not hasattr(tickers, 'items'):
+            print(f"Warning: tickers object doesn't have 'items' method")
+            return
+        
+        for key, value in tickers.items():
             try:
                 self.info[key] = value.info
-            except Exception as e:
-                print(f'*** debug {key} error: {e} ticker info: {value.info}') # value.__dict__
+            except AttributeError as e:
+                # 只捕获AttributeError，更有针对性
+                print(f'*** debug {key} error: {e}. Object attributes: {dir(value)}')
                 self.info[key] = {}
-    
+            except Exception as e:
+                # 记录其他意外异常
+                print(f'*** debug {key} unexpected error: {type(e).__name__}: {e}')
+                self.info[key] = {}
+
     def get_longName(self,symbol):
-        return (self.info[symbol].get('longName', '') if isinstance(self.info, dict) and symbol in self.info else getattr(getattr(self.info, symbol, None), 'longName', '')) if self.info else ''
+        return (self.info[symbol].get('longName', '') if isinstance(self.info, dict) and \
+            symbol in self.info else getattr(getattr(self.info, symbol, None), 'longName', '')) \
+                if self.info else ''
         #print(f'**** debug [{symbol}] **** type is: {type(self.info[symbol])}')
 
     def get_info(self,symbol):
