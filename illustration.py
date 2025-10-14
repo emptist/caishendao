@@ -466,7 +466,7 @@ def bokeh_draw(
         l_text_color = 'red'
         l_text_y_offset = 20
     elif df.scall.iloc[-1]:
-        l_text = f'{symbol}: Sell Covered Call'
+        l_text = f'{symbol}: Sell Some'
         l_text_color = 'red'
         l_text_y_offset = 20
     elif df.buy.iloc[-1]: 
@@ -474,7 +474,7 @@ def bokeh_draw(
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif df.sput.iloc[-1]:
-        l_text = f'{symbol}: Sell Covered Put'
+        l_text = f'{symbol}: Buy Some'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:
