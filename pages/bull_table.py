@@ -71,26 +71,12 @@ class StStockData(StockData):
 
 
 class StStockGroup(StockGroup):
-    """Streamlit专用的Stock组类，继承自StockGroup
-    
-    用于在Streamlit应用中处理和展示多只Stock的数据
-    
-    Attributes:
-        clsStockData: 使用StStockData类处理单只Stock数据
-    """
     clsStockData = StStockData
 
 
 @st.cache_data(ttl=600)
 def set_symbols(type):
-    """根据类型获取Stock/ETF代码列表
     
-    Args:
-        type (str): Stock/ETF类型，如'Simple'、'Bios'、'Pairs'等
-        
-    Returns:
-        set: 对应类型的Stock/ETF代码集合
-    """
     if type == 'Simple':
         symbols = MyFavorites.pick_ups
     elif type == 'Indices':
@@ -131,16 +117,6 @@ def set_symbols(type):
 
 @st.cache_resource(ttl=600)
 def prepare_group(symbols_set, interval, pe_limit):
-    """准备Stock组数据
-    
-    Args:
-        symbols_set (set): Stock代码集合，用于缓存健壮性
-        interval (str): 时间间隔
-        pe_limit (int): 市盈率限制
-        
-    Returns:
-        StStockGroup: 包含指定Stock的StStockGroup实例
-    """
     
     reserved_set = {'GDX','GDXU','GLD','UGL'}
 
@@ -156,16 +132,6 @@ def prepare_group(symbols_set, interval, pe_limit):
 
 
 def refine_list(_stk_group,dceil,filter):
-    """根据筛选条件优化Stock列表
-    
-    Args:
-        _stk_group (StStockGroup): StStockGroup实例
-        dceil (int): d值上限
-        filter (str): 筛选条件
-        
-    Returns:
-        list: 符合条件的Stock代码列表
-    """
     symbol_list = _stk_group.select(dceil=dceil,filter=filter)
     return symbol_list
 
@@ -175,16 +141,7 @@ def refine_list(_stk_group,dceil,filter):
 
 
 def build_page():
-    """构建Streamlit应用页面，包括控件、表格和图表展示
-    
-    功能包括：
-    - 提供各种筛选控件供用户选择
-    - 展示Stock数据表格
-    - 根据用户选择绘制Stock图表
-    - 生成并显示AI分析报告
-    - 播放提示音频
-    """
-
+   
     # --- Controls ---
     col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
     with col2:
@@ -216,9 +173,18 @@ def build_page():
 
     # This needs to be done *before* the selectbox for selected_symbol is rendered
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
-    
     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-    
+    #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
+
+    # Initialize or get the selected symbol from session state
+    # if 'selected_symbol' not in st.session_state:
+    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+
+    # # Ensure the selected symbol is still in the current list
+    # if st.session_state.selected_symbol not in symbol_list:
+    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+
+
     len_all_intervals = len(stk_group.all_intervals)
     # This is the list of columns we want to display in our table.
     info_columns = [
