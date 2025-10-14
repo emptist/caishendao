@@ -172,17 +172,18 @@ def build_page():
     symbol_list = refine_list(stk_group,dceil=d_ceiling,filter=selected_filter)
     
     # NOTE: The first symbol in the list should be selected each time the page is reloaded
-    st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    # st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
     #print('selected_symbol: ', st.session_state.selected_symbol, symbol_list)
 
     # Initialize or get the selected symbol from session state
-    # if 'selected_symbol' not in st.session_state:
-    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
-
     # # Ensure the selected symbol is still in the current list
-    # if st.session_state.selected_symbol not in symbol_list:
-    #     st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
+    # the if condition is added by jules suggestion, remove if anything unsucessful
+    if 'selected_symbol' not in st.session_state or st.session_state.selected_symbol not in symbol_list:
+        st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
+        # added by jules suggestion, remove if anything unsucessful
+        if 'show_ai_analysis' not in st.session_state:
+            st.session_state.show_ai_analysis = {}
 
     len_all_intervals = len(stk_group.all_intervals)
     # This is the list of columns we want to display in our table.
@@ -297,6 +298,14 @@ def build_page():
         if selected_rows is not None:
             if not selected_rows.empty and selected_rows.iloc[0]['symbol'] != st.session_state.selected_symbol:
                 st.session_state.selected_symbol = selected_rows.iloc[0]['symbol']
+                
+                # added by suggestion of jules, remove if anything unsucessful
+                if 'show_ai_analysis' in st.session_state:
+                    #st.session_state.show_ai_analysis[st.session_state.selected_symbol] = False
+                    st.session_state.show_ai_analysis = {}
+
+                # added by suggestion of jules, remove if anything unsucessful
+                st.rerun()
 
     elif symbol_list:
         st.write(symbol_list)
