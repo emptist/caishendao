@@ -268,11 +268,24 @@ def build_page():
             width=55,       # Default column width of 55px
             sortable=True, 
             resizable=True, 
-            filterable=True,
+            filterable=False,
             #domLayout=['autoHeight','autoSize'],
+            suppressColumnMenu=True,
         )
 
         gridOptions = gb.build()
+        # Disable filtering and menus at grid level
+        gridOptions['enableFilter'] = False
+        gridOptions['enableMenu'] = False
+        gridOptions['suppressContextMenu'] = True
+        
+        # Add multiple suppression properties to all columns to ensure menu icons are hidden
+        if 'columnDefs' in gridOptions:
+            for colDef in gridOptions['columnDefs']:
+                colDef['suppressMenu'] = True
+                colDef['suppressColumnMenu'] = True
+                colDef['menuTabs'] = []  # Remove all menu tabs
+                colDef['filter'] = False  # Explicitly disable filter for each column
 
         # Removed autoSizeStrategy to use fixed widths for better control
         # gridOptions['autoSizeStrategy'] = {'type': 'fitCellContents'}
