@@ -5,7 +5,7 @@ from settings_favors import favors
 from settings_now_down import now_down
 from settings_top_sp import top_sp
 from settings_ns100 import ns100
-from settings_bio import bios
+from settings_bios import bios
 from settings_indices import indices
 
 class MyFavorites:    
