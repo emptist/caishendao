@@ -314,12 +314,13 @@ def build_page():
                 
                 # added by suggestion of jules, remove if anything unsucessful
                 if 'show_ai_analysis' in st.session_state:
-                    #st.session_state.show_ai_analysis[st.session_state.selected_symbol] = False
                     st.session_state.show_ai_analysis = {}
 
-                # added by suggestion of jules, remove if anything unsucessful
-                st.rerun()
-
+                # Directly update the chart without full rerun
+                # The chart will update automatically on the next render cycle
+                # without the overhead of a complete page rerun
+                # st.rerun()
+                
     elif symbol_list:
         st.write(symbol_list)
     else:
