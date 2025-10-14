@@ -35,8 +35,8 @@ period = MySetts.period
 interval = MySetts.interval
 hourly = MySetts.hourly
 
-sma_bars = [7,14,30,60,140,300,500]
-sma_names = ['sma7','sma14','sma30','sma60','sma140','sma300','sma500'] #'bbm'
+sma_bars = [7]#[7,14,30,60,140,300,500]
+sma_names = ['sma7'] #['sma7','sma14','sma30','sma60','sma140','sma300','sma500'] #'bbm'
 ##################### Data ######################
 
 
@@ -320,7 +320,7 @@ def extra_calcs(data,sma_name,interval):
     label = (sma_name if (sma_name == 'bbm') else sma_name[3:])
     data[f'hsf{label}'] = data[sma_name].cummax()
     data[f'hprd{label}'] = (data[sma_name] == data[f'hsf{label}']).cumsum()
-    data[f'hrows{label}'] = data.groupby(f'hprd{label}').cumcount()
+    #data[f'hrows{label}'] = data.groupby(f'hprd{label}').cumcount()
 
     # use original lowest here
     data[f'lsf{label}'] = data[sma_name].cummin()
@@ -328,12 +328,7 @@ def extra_calcs(data,sma_name,interval):
     data[f'lrows{label}'] = data.groupby(f'lprd{label}').cumcount()
 
     #if (interval in ['1d']) and (sma_name in ['sma7','sma140']):
-    if (sma_name in [
-        'bbm',
-        'sma7',
-        'sma30',
-        # 'sma140',
-        ]):
+    if (sma_name in ['bbm','sma7']):
         data[f'hlsf{label}'] = data.groupby(f'hprd{label}')[sma_name].transform(lambda x: x.cummin())
         data[f'hlprd{label}'] = (data[sma_name] == data[f'hlsf{label}']).cumsum()
         #data[f'hlrows{label}'] = data.groupby(f'hlprd{label}').cumcount()
@@ -358,22 +353,17 @@ def extra_calcs(data,sma_name,interval):
 
             # Get the first 'cmal' value in each 'lprd' group
             start_cmal = data.groupby(f'lprd{label}')[f'cmal{label}'].transform('first')
-
             # compound grouth velocity over bars periods
             bars = lrows_series + 1
             times_incr = cmal_series / start_cmal
             velocity = 100 * (times_incr ** (1/bars)) - 100
-
             # Handle division by zero or NaN results
             data[f'velo{label}'] = velocity.fillna(0)
-
-            # to check the calculation by display all values involved at last row
-            #print(f"TEST velo: {data[f'velo{label}'].iloc[-1]} is calculated with {cmal_series.iloc[-1]} - {start_cmal.iloc[-1]} / {start_cmal.iloc[-1]} * ({lrows_series.iloc[-1]} + 1) = {denominator.iloc[-1]}")
-
         if sma_name == 'sma7':
             data['bias'] = 100 * data.close / data[sma_name] - 100
             #data['bias'] = 100 * data.close / data[f'lcmah{label}'] - 100
 
+            data[f'cmah{label}'] = data.groupby(f'hprd{label}')[sma_name].expanding().mean().values
             # measure the consistency of the uptrend by sum of number of bars where hrows is 0 divided by the total number of bars
             #data[f'cnst{label}'] = 100 * (data[f'hrows{label}'] == 0).expanding(min_periods=1).mean()
             data[f'hlrows{label}'] = data.groupby(f'hlprd{label}').cumcount()
@@ -470,26 +460,13 @@ def calc_smas(df,cma,interval):
     # so we might (or not) adjust the ma system accordingly
     for bars in sma_bars:
         df[f'sma{bars}'] = df.close.rolling(bars).mean()
-
-    '''    
-    df['sma7'] = df.close.rolling(7).mean()
-    df['sma14'] = df.close.rolling(14).mean()
-    df['sma30'] = df.close.rolling(30).mean()
-    df['sma60'] = df.close.rolling(60).mean()
-    df['sma140'] = df.close.rolling(140).mean()
-    df['sma300'] = df.close.rolling(300).mean()
-    df['sma500'] = df.close.rolling(500).mean()
-    '''
-
     cols = df.columns
     for sma_name in sma_names:
         if sma_name in cols:
             df[sma_name] = df[sma_name].fillna(cma)
         else:
             df[sma_name] = cma
-        
         df = extra_calcs(df,sma_name,interval)
-
     return df
 
 # return a series of grouped cumulative counts of true
@@ -890,7 +867,7 @@ def set_etf_entries(df,interval):
     df['buy'] = df.sput & ((df.open <= df.bbu)|(df.close <= df.bbu))
     df['sell'] = df.scall & ((df.open >= df.bbl)|(df.close >= df.bbl))
     
-    df['watch'] = (df.j.shift(1) < 8) & (df.j > df.j.shift(1)) & (df.sma30 > df.sma140) & (df.sma140 > df.sma140.shift(1))
+    df['watch'] = (df.j.shift(1) < 8) & (df.j > df.j.shift(1)) & (df.close > df.bbm) & (df.bbm > df.bbm.shift(1))
     both_equal = cma_sma_equal(df,interval)
     df['hold'] = df.cmas_up & both_equal
 

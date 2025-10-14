@@ -431,7 +431,7 @@ class StockGroup:
             #return e.sort_by_interval_kdj()
             #return e.sort_by_interval_bias()
             #return e.sort_by_interval_amount() 
-            #return e.sort_by_interval_cma_rbl('sma7') # use sma30 with month data 
+            #return e.sort_by_interval_cma_rbl('sma7')
         g.sort_potentials(srt,reverse=True)
         return g
 
@@ -473,7 +473,7 @@ class StockGroup:
             #return e.sort_by_interval_percent()
             return e.sort_by_interval_kdj()
             #return e.sort_by_interval_amount() 
-            #return e.sort_by_interval_cma_rbl('sma7') # use sma30 with month data 
+            #return e.sort_by_interval_cma_rbl('sma7')
         g.sort_potentials(srt,reverse=True)
         return g
 
@@ -497,7 +497,7 @@ class StockGroup:
 
         def srt(e):
             return e.sort_by_interval_percent()
-            #return e.sort_by_interval_cma_rbl('sma7') # use sma30 with month data 
+            #return e.sort_by_interval_cma_rbl('sma7')
 
         stk_group = cls.potential_group(
             detecting,

@@ -213,7 +213,6 @@ def bokeh_draw(
     # p.line('idx','sma14',line_width=0.5,source=source,hover_alpha=0.9,line_color='green')
 
     # key indicators: lcmah7, lcmahbbm
-    indic7 = "lcmah7"  #'sma7'
     p.line(
         "idx",
         'sma7',
@@ -229,6 +228,14 @@ def bokeh_draw(
         hover_alpha=0.9,
         line_color="darkviolet",
         line_width=1.9,
+    )
+    p.line(
+        "idx",
+        "cmah7",
+        source=source,
+        hover_alpha=0.9,
+        line_color="blue",
+        line_width=1.2,
     )
 
     # p.line('idx','sma60',line_width=0.5,source=source,hover_alpha=0.9,line_color='darkred')
@@ -462,33 +469,33 @@ def bokeh_draw(
     p.add_tools(hover)
 
     if df.sell.iloc[-1]: 
-        l_text = f'{symbol}: SELL'
+        l_text = f'{symbol}: Sell'
         l_text_color = 'red'
-        l_text_y_offset = 20
+        l_text_y_offset = -20
     elif df.scall.iloc[-1]:
-        l_text = f'{symbol}: Sell Some'
+        l_text = f'{symbol}: Dismiss Call'
         l_text_color = 'red'
-        l_text_y_offset = 20
+        l_text_y_offset = -20
     elif df.buy.iloc[-1]: 
-        l_text = f'{symbol}: BUY'
+        l_text = f'{symbol}: Buy'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif df.sput.iloc[-1]:
-        l_text = f'{symbol}: Buy Some'
+        l_text = f'{symbol}: Dismiss Put'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:
         l_text = f'{symbol}: Trending Up'
         l_text_color = 'magenta'
-        l_text_y_offset = -20
+        l_text_y_offset = -10
     elif df.avrgs_bear.iloc[-1]:
         l_text = f'{symbol}: Trending Down'
         l_text_color = 'green'
-        l_text_y_offset = 20
+        l_text_y_offset = -10
     else:
-        l_text = f'{symbol}: DUBIOUS'
+        l_text = f'{symbol}: Dubious'
         l_text_color = 'gray'
-        l_text_y_offset = 0
+        l_text_y_offset = -10
     
     
     label = Label(
@@ -504,7 +511,7 @@ def bokeh_draw(
         text_color=l_text_color,
         #border_line_color='#c3c99a',
         background_fill_color='white',
-        background_fill_alpha=0.9,
+        background_fill_alpha=0.2,
     )
 
     p.add_layout(label)
