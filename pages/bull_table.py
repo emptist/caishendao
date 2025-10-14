@@ -33,14 +33,12 @@ st.sidebar.header('Bulls Detector')
 
 # bull_table应用专用配置
 class BullTableSettings:
-    # UI配置项
     stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
     intervals = ['1d','1h','30m','15m','1wk','1mo']
     filters = ['All','Foot','Fork','Leap','Potential','sput','buy','sell','scall','cmas_up','breakm','watch','maGood','<BBM','>=BBM','<bb4l','<bb6l','<bbl','<cmal', '<7', '>=7', 'DonJ', 'JonD']
     indicators = ['none','consis','both','kdj','bias']
     display_lengths = [150,300,600,1200,2400,4800,9600]
     
-    # 默认配置
     default_width = 1150
     default_height = 500
     default_d_ceiling = 105
@@ -48,7 +46,7 @@ class BullTableSettings:
 
 
 class StQuote(Quote):
-    #async 
+    # never add: async 
     def plot_raw_data(self,symbol,whole_view,in_y2,length,height,symbol_info):
         #min(selected_length,len(df)-1)
         df = self.df[-length:]
@@ -135,9 +133,6 @@ def refine_list(_stk_group,dceil,filter):
     symbol_list = _stk_group.select(dceil=dceil,filter=filter)
     return symbol_list
 
-
-#-- AI functions have been moved to ai_analysis.py module
-#-- All AI-related functionality is now handled by the imported ai_analysis module
 
 
 def build_page():
