@@ -35,10 +35,81 @@ def st_ai_analysis_area(symbol, info, ai_provider, session_state):
 
         # If the analysis has been triggered for the symbol, display it
         if session_state.show_ai_analysis.get(symbol, False):
-            ai_container = st.container()
-            with ai_container:
+            # Create strong global CSS that will override any page background settings
+            st.markdown(
+                f"""<style>
+                    /* Strong container styling that will override any background */
+                    .ai-analysis-container {{ 
+                        background-color: white !important; 
+                        color: #333 !important;
+                        border-radius: 8px; 
+                        padding: 1.5rem; 
+                        margin: 1rem 0;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        z-index: 1000;
+                    }}
+                    
+                    /* Direct styling for markdown content inside */
+                    .ai-content {{ 
+                        background-color: white !important; 
+                        color: #333 !important;
+                        padding: 1rem;
+                        border-radius: 4px;
+                    }}
+                    
+                    /* Ensure all text elements have proper color */
+                    .ai-content p, .ai-content li, .ai-content h1, .ai-content h2, .ai-content h3, .ai-content h4, 
+                    .ai-content h5, .ai-content h6, .ai-content table, .ai-content code {{ 
+                        color: #333 !important;
+                    }}
+                    
+                    /* Style for chat messages */
+                    .ai-chat-message {{ 
+                        background-color: #f8f9fa; 
+                        color: #333;
+                        padding: 0.75rem; 
+                        border-radius: 8px; 
+                        margin-bottom: 0.5rem;
+                        max-width: 90%;
+                    }}
+                    
+                    .ai-chat-message.user {{ 
+                        background-color: #e3f2fd; 
+                        margin-left: auto;
+                    }}
+                    
+                    .ai-chat-message.assistant {{ 
+                        background-color: #f1f1f1; 
+                    }}
+                    
+                    /* Style the Streamlit components within the container */
+                    .ai-analysis-container .stMarkdown {{ 
+                        color: #333 !important;
+                    }}
+                    
+                    .ai-analysis-container .stMarkdown h1, 
+                    .ai-analysis-container .stMarkdown h2, 
+                    .ai-analysis-container .stMarkdown h3 {{ 
+                        color: #2c3e50 !important;
+                    }}
+                    
+                    /* Style the divider */
+                    .ai-analysis-container hr {{ 
+                        border-color: #e0e0e0;
+                        margin: 1.5rem 0;
+                    }}
+                </style>""",
+                unsafe_allow_html=True
+            )
+            
+            # Create a container with the custom class
+            ai_main_container = st.container()
+            with ai_main_container:
+                # Add the custom class to the container
+                st.markdown('<div class="ai-analysis-container">', unsafe_allow_html=True)
                 ai_analysis = st.empty()
-            show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state)
+                show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state)
+                st.markdown('</div>', unsafe_allow_html=True)
     else:
         # If no valid info is available, show a warning
         st.warning(f"Could not retrieve detailed information for {symbol} to generate analysis.")
@@ -510,7 +581,7 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
                 analysis_session_id = ai_cache.save_analysis_to_disk(symbol, analysis, ai_provider, records_dir)
                 session_state.current_analysis_session_id[symbol] = analysis_session_id
         
-        st.markdown("---")
+        st.markdown("<hr>", unsafe_allow_html=True)
         # Get current model name and display in title
         model_info = ""
         if ai_provider == 'gemini' and 'current_gemini_model' in st.session_state and symbol in st.session_state.current_gemini_model:
@@ -520,11 +591,9 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
             model_info = "(qwen-turbo)"
             
         st.markdown(f"### AI-Powered Analysis{model_info}")
-        # Create a container with background color to ensure readability
-        analysis_container = st.container()
-        with analysis_container:
-            # Use Streamlit's native markdown rendering with a container
-                st.markdown(analysis)
+        
+        # Wrap the AI content in a properly styled div
+        st.markdown(f'<div class="ai-content">{analysis}</div>', unsafe_allow_html=True)
         
         # Store current analysis results in session state
         session_state.current_analysis = analysis
@@ -551,13 +620,9 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
             with st.container(key=f"chat_container_{symbol}"):
                 for i, message in enumerate(session_state[chat_history_key]):
                     if message['role'] == 'user':
-                        with st.chat_message("user"):
-                            # Use Streamlit's native markdown rendering for user messages
-                            st.markdown(message['content'])
+                        st.markdown(f'<div class="ai-chat-message user">{message["content"]}</div>', unsafe_allow_html=True)
                     else:
-                        with st.chat_message("assistant"):
-                            # Use Streamlit's native markdown rendering for assistant messages
-                            st.markdown(message['content'])
+                        st.markdown(f'<div class="ai-chat-message assistant">{message["content"]}</div>', unsafe_allow_html=True)
             
         col_input, col_clear = st.columns([4, 1])
         with col_input:
