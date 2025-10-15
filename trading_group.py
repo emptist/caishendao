@@ -409,15 +409,15 @@ class StockGroup:
         g.recollect_dicts()
         
         def detecting(q:Quote,symbol=''):
-            bias_limit = 15 #3
+            bias_limit = 3 #3
             bull_starts = q.bias_not_high(bias_limit) 
+            return bull_starts and q.buy()
             # no more detects needed since we directly detect buy or sput
             #bull_starts = q.bias_not_high(bias_limit) and (q.high_cnstvelo() or q.high_cnst())
-            return bull_starts and (q.buy() or q.sput())
-
+            #return bull_starts and (q.buy() or q.sput())
+            
         g.find_potential_target(detecting=detecting,srt=None)
     
-
         for interval in all_intervals:
             if interval != init_interval:
                 g.potential_dict_add_data_for(interval)
