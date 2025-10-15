@@ -151,11 +151,11 @@ def bokeh_draw(
 
     
     # Disable background fill for now to have a clean look since streamlit apps have there own page color 
-    # last_ma_bullish = df.avrgs_bull.iloc[-1]
-    # if last_ma_bullish:
-    #     # if df.sput.iloc[-1]:
-    #     p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
-    #     p.background_fill_alpha = 0.2
+    last_ma_bullish = df.avrgs_bull.iloc[-1]
+    if last_ma_bullish and df.sput.iloc[-1]:
+        # if df.sput.iloc[-1]:
+        p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
+        p.background_fill_alpha = 0.2
 
     inc = df.close > df.open
     dec = df.open >= df.close
