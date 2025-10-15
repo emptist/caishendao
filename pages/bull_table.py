@@ -182,8 +182,8 @@ def build_page():
         st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
         # added by jules suggestion, remove if anything unsucessful
-        if 'show_ai_analysis' not in st.session_state:
-            st.session_state.show_ai_analysis = {}
+        # if 'show_ai_analysis' not in st.session_state:
+        #     st.session_state.show_ai_analysis = {}
 
     len_all_intervals = len(stk_group.all_intervals)
     # This is the list of columns we want to display in our table.
@@ -313,8 +313,8 @@ def build_page():
                 st.session_state.selected_symbol = selected_rows.iloc[0]['symbol']
                 
                 # added by suggestion of jules, remove if anything unsucessful
-                if 'show_ai_analysis' in st.session_state:
-                    st.session_state.show_ai_analysis = {}
+                # if 'show_ai_analysis' in st.session_state:
+                #     st.session_state.show_ai_analysis = {}
 
                 # Directly update the chart without full rerun
                 # The chart will update automatically on the next render cycle
