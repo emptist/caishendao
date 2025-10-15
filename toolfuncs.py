@@ -265,7 +265,7 @@ def find_peaks(series, df, extra_cond):
     
 # lowest inside high period version
 # data: inout
-def calc_cma(data,interval,num_std_dev=0.98):
+def _no_calc_cma_(data,interval,num_std_dev=0.98):
     # Track the highest 'high' value encountered so far
     data['hsf'] = data['high'].cummax()
     # Increment 'high_period' each time a new peak is reached
@@ -553,10 +553,10 @@ def calc_kdj(df,interval):
 def df_prepare(df,interval):
     cma = df.close.expanding().mean()
     df = calc_bb(df,cma,interval,num_std_dev=1.99)
-    # calc cmas
-    needed = True
+    # calc cmas this is not needed anymore, now we only use cma_for_smas
+    needed = False
     if needed:
-        df = calc_cma(df,interval)
+        df = _no_calc_cma_(df,interval)
     df = calc_smas(df,cma,interval)
     df = calc_kdj(df,interval)
     return df
@@ -576,7 +576,7 @@ def predicted(df,interval,fully=True):
     if fully == True:
         return df
     else:
-        return slice_hlrows(df,'hrows',remain_bars)
+        return slice_hlrows(df,'hrows7',remain_bars)
 
 
 def refine_columns_for_backtesting(df):
@@ -617,7 +617,7 @@ def set_entries(df,interval):
 # only suitable for bear market bottom
 def predict_dl(df,threshold=25):
     # Apply the function to the 'd' column to get a boolean series where peaks are True and 'd' > 60
-    extra_cond = (df.d < threshold) & (df.hrows >= hrow_max) #& (df.bbm < df.cmah)
+    extra_cond = (df.d < threshold) & (df.hrows7 >= hrow_max) #& (df.bbm < df.cmah7)
     find_troughs('d',df,extra_cond)
 
     df['std_dla'] = df.cma_dl.expanding().std()
@@ -638,8 +638,8 @@ def predict_dl(df,threshold=25):
 
 def predict_dh(df,threshold=70):
     # Apply the function to the 'd' column to get a boolean series where peaks are True and 'd' > 60
-    #extra_cond = (df.d > threshold) & (df.hrows < hrow_max)    
-    extra_cond = (df.d > threshold) & ((df.hrows < hrow_max) | (df.high > df.cmah)) 
+    #extra_cond = (df.d > threshold) & (df.hrows7 < hrow_max)    
+    extra_cond = (df.d > threshold) & ((df.hrows7 < hrow_max) | (df.high > df.cmah7)) 
     find_peaks('d',df,extra_cond)
 
     df['std_dha'] = df.cma_dh.expanding().std()
@@ -744,7 +744,7 @@ def recent_rbl_ma(df, sma):
 # I don't understand these, chat_gpt4 gives me:
 # def comparing_example(df): # MOVED to extra/toolfuncs_extra.py
 #     b = df.apply(lambda row:
-#         (row.bbm < df.low.shift(row.lrows))[row.name] & (row.bbm < df.bbm.shift(row.lrows))[row.name],
+#         (row.bbm < df.low.shift(row.lrows7))[row.name] & (row.bbm < df.bbm.shift(row.lrows7))[row.name],
 #         axis=1
 #     )
 #     df['result'] = b

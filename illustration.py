@@ -256,11 +256,6 @@ def bokeh_draw(
         # p.line(df.idx,df[iname],line_width=0.5)
         p.line("idx", iname, source=source, hover_alpha=0.9, line_width=0.5)
 
-    # cmah/l
-    # p.line('idx','cmah',source=source,hover_alpha=0.9,line_color='darkblue',line_width=0.7)
-    # p.line('idx','cmam',source=source,hover_alpha=0.9,line_color='magenta',line_width=0.7) #cyan
-    # p.line('idx','cmal',source=source,hover_alpha=0.9,line_color='brown',line_width=0.7)
-    # p.line('idx','lcmah',source=source,hover_alpha=0.9,line_color='navy',line_width=0.7)
 
     if interval in ["1d", "1h", "1wk", "1mo"]:
     #     p.line(
@@ -432,10 +427,10 @@ def bokeh_draw(
             ("cnst", "@cnst7"),
             ("cnsvel", "@cnsvel7"),
             ("velo", "@velo7"),
-            ("lcmah", "@lcmah"),
-            ("cmah", "@cmah"),
+            ("lcmah7", "@lcmah7"),
+            ("cmah7", "@cmah7"),
             ("cmam", "@cmam"),
-            ("cmal", "@cmal"),
+            ("cmal7", "@cmal7"),
             ("bbu", "@bbu"),
             # ('bb6u','@bb6u'),
             # ('bb4u','@bb4u'),
@@ -443,9 +438,9 @@ def bokeh_draw(
             # ('bb4l','@bb4l'),
             # ('bb6l','@bb6l'),
             ("bbl", "@bbl"),
-            # ('hrows','@hrows'),
-            # ('lhrows','@lhrows'),
-            # ('lrows','@lrows'),
+            # ('hrows7','@hrows7'),
+            # ('lhrows7','@lhrows7'),
+            # ('lrows7','@lrows7'),
             # ('pdh_l','@pdh_l'),
             ("j", "@j"),
             ("k", "@k"),

@@ -95,7 +95,7 @@ class Quote:
                 case 'cmas_up':
                     return df.cmas_up.iloc[-1]
                 case 'breakm': # m means month data
-                    breakbars = ((df.high >= df.cmah) & (df.high >= df.lcmah)) 
+                    breakbars = ((df.high >= df.cmah7) & (df.high >= df.lcmah7)) 
                     return breakbars.iloc[-1] & ~breakbars.iloc[-2]
                 case 'watch':
                     return df.watch.iloc[-1]
@@ -123,8 +123,8 @@ class Quote:
                     return df.close.iloc[-1] < df.bb6l.iloc[-1]
                 case '<bbl':
                     return df.close.iloc[-1] < df.bbl.iloc[-1]
-                case '<cmal':
-                    return df.close.iloc[-1] < df.cmal.iloc[-1]
+                case '<cmal7':
+                    return df.close.iloc[-1] < df.cmal7.iloc[-1]
                 case _:
                     return True
         else:
@@ -149,12 +149,12 @@ class Quote:
             return False
 
         df = self.df_predict().df
-        return (df.hrows.iloc[-2] >= x) & (df.hrows.iloc[-2] > df.hrows.iloc[-1])
-        #return df.hrows.iloc[-1] <= 1
+        return (df.hrows7.iloc[-2] >= x) & (df.hrows7.iloc[-2] > df.hrows7.iloc[-1])
+        #return df.hrows7.iloc[-1] <= 1
 
 
     def new_high(self, n=1):
-        return self.df_predict().df.hrows.iloc[-1] < n
+        return self.df_predict().df.hrows7.iloc[-1] < n
 
     def j_not_high(self,j=98,d=98): # j=123
         df = self.df_predict().df

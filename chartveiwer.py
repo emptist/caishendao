@@ -116,10 +116,10 @@ st_ai_analysis_area(selected_stock,info,ai_provider, session_state=st.session_st
 if selected_stock in ['SPY','QQQ']:
     coll1,coll2,coll3 = st.columns([1,1,1])
     with coll1:
-        df_value = max(df.lhsf.iloc[-1], df.hsf.iloc[-1]) if df.sell.iloc[-1] else min(df.lsf.iloc[-1],df.bbl.iloc[-1])
+        df_value = max(df.lhsf7.iloc[-1], df.hsf7.iloc[-1]) if df.sell.iloc[-1] else min(df.lsf7.iloc[-1],df.bbl.iloc[-1])
         sell_opt_strike = st.number_input('Sell opt strike', value=round(df_value))
     with coll2:
-        df_value = max(df.bbu.iloc[-1],df.hsf.iloc[-1],df.lhsf.iloc[-1])*1.1 if df.sell.iloc[-1] else min(df.lsf.iloc[-1],df.bbl.iloc[-1])*0.9
+        df_value = max(df.bbu7.iloc[-1],df.hsf7.iloc[-1],df.lhsf7.iloc[-1])*1.1 if df.sell.iloc[-1] else min(df.lsf7.iloc[-1],df.bbl.iloc[-1])*0.9
         buy_opt_strike = st.number_input('Buy opt strike', value=round(df_value))
     with coll3:
         min_gain_risk_ratio = st.selectbox('Min gain ratio', ['3/8','1/3','5/12','11/24'])
