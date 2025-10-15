@@ -35,7 +35,7 @@ st.sidebar.header('Bulls Detector')
 class BullTableSettings:
     #stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
     stock_types = ['Indices','Bios','Gists','Simple']
-    intervals = ['1d','1h','30m','15m','1wk','1mo']
+    intervals = ['1mo','1wk','1d','1h','30m','15m',]
     filters = ['All','Foot','Fork','Leap','Potential','sput','buy','sell','scall','cmas_up','breakm','watch','maGood','<BBM','>=BBM','<bb4l','<bb6l','<bbl','<cmal7', '<7', '>=7', 'DonJ', 'JonD']
     indicators = ['none','consis','both','kdj','bias']
     display_lengths = [150,300,600,1200,2400,4800,9600]
