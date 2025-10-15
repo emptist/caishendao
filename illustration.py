@@ -493,7 +493,7 @@ def bokeh_draw(
     
     
     label = Label(
-        x=df.idx.iloc[1], 
+        x=df.idx.iloc[0], 
         y=df.close.iloc[-1],  
         x_offset=0, 
         y_offset=l_text_y_offset,
