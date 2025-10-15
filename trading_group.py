@@ -218,8 +218,11 @@ class Quote:
         return velo
     
 
-    def bias_not_high(self, limit=3):
-        return self.bias_value() <= limit
+    def bias_not_high(self, limit=0.7):
+        """
+        limit: 0.7 means 0.70% to interval '1d', will be adjusted to other intervals
+        """
+        return self.bias_value() <= limit * MySetts.equivalence_to_days(self.interval)
 
     def bias_value(self):
         df = self.df_predict().df
@@ -409,11 +412,10 @@ class StockGroup:
         g.recollect_dicts()
         
         def detecting(q:Quote,symbol=''):
-            bias_limit = 3 #3
-            bull_starts = q.bias_not_high(bias_limit) 
+            bull_starts = q.bias_not_high() 
             return bull_starts and q.buy()
             # no more detects needed since we directly detect buy or sput
-            #bull_starts = q.bias_not_high(bias_limit) and (q.high_cnstvelo() or q.high_cnst())
+            #bull_starts = q.bias_not_high() and (q.high_cnstvelo() or q.high_cnst())
             #return bull_starts and (q.buy() or q.sput())
             
         g.find_potential_target(detecting=detecting,srt=None)
@@ -763,7 +765,7 @@ class StockGroup:
     def get_info_df(self,symbol_list):
         return pd.DataFrame.from_dict(self.info,orient='index').loc[symbol_list]
 
-    def get_filtered_info_df(self, symbol_list, columns, extra_columns=['bias','cnst7','velo7']):
+    def get_filtered_info_df(self, symbol_list, columns, extra_columns=['bias','cnsvel7','cnst7','velo7']):
         full_df = pd.DataFrame.from_dict(self.info, orient='index')
 
         # Ensure the symbol_list is valid and exists in the dataframe
@@ -797,7 +799,6 @@ class StockGroup:
                                 filtered_df.loc[symbol, col] = df[col].iloc[-1]
                             else:
                                 filtered_df.loc[symbol, col] = None
-                        filtered_df.loc[symbol, 'cnstvelo'] = df['cnsvel7'].iloc[-1]
                 else:
                     # Set all extra columns to None if no valid data found
                     for col in extra_columns:

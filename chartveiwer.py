@@ -48,6 +48,7 @@ with col1:
     ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])
 with col6:
     symbol = st.session_state.get('selected_symbol','SHLD')
+    symbol = 'SHLD' if symbol.isspace() or symbol == '' else symbol
     selected_stock = st.text_input('Symbol',symbol).upper()
 
 @st.cache_data  
@@ -113,16 +114,16 @@ st.write(f'**{selected_stock} data from {len(df)} bars, {close_start} -> {close_
 st_ai_analysis_area(selected_stock,info,ai_provider, session_state=st.session_state)
 
 #st.subheader(f'{selected_stock} option spread')
-if selected_stock in ['SPY','QQQ']:
-    coll1,coll2,coll3 = st.columns([1,1,1])
-    with coll1:
-        df_value = max(df.lhsf7.iloc[-1], df.hsf7.iloc[-1]) if df.sell.iloc[-1] else min(df.lsf7.iloc[-1],df.bbl.iloc[-1])
-        sell_opt_strike = st.number_input('Sell opt strike', value=round(df_value))
-    with coll2:
-        df_value = max(df.bbu7.iloc[-1],df.hsf7.iloc[-1],df.lhsf7.iloc[-1])*1.1 if df.sell.iloc[-1] else min(df.lsf7.iloc[-1],df.bbl.iloc[-1])*0.9
-        buy_opt_strike = st.number_input('Buy opt strike', value=round(df_value))
-    with coll3:
-        min_gain_risk_ratio = st.selectbox('Min gain ratio', ['3/8','1/3','5/12','11/24'])
+# if selected_stock in ['SPY','QQQ']:
+#     coll1,coll2,coll3 = st.columns([1,1,1])
+#     with coll1:
+#         df_value = max(df.lhsf7.iloc[-1], df.hsf7.iloc[-1]) if df.sell.iloc[-1] else min(df.lsf7.iloc[-1],df.bbl.iloc[-1])
+#         sell_opt_strike = st.number_input('Sell opt strike', value=round(df_value))
+#     with coll2:
+#         df_value = max(df.bbu7.iloc[-1],df.hsf7.iloc[-1],df.lhsf7.iloc[-1])*1.1 if df.sell.iloc[-1] else min(df.lsf7.iloc[-1],df.bbl.iloc[-1])*0.9
+#         buy_opt_strike = st.number_input('Buy opt strike', value=round(df_value))
+#     with coll3:
+#         min_gain_risk_ratio = st.selectbox('Min gain ratio', ['3/8','1/3','5/12','11/24'])
 
     #selected_height = int(selected_height*0.8)
     #plot_raw_data()
