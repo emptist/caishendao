@@ -429,7 +429,7 @@ def bokeh_draw(
             ("velo", "@velo7"),
             ("lcmah7", "@lcmah7"),
             ("cmah7", "@cmah7"),
-            ("cmal7", "@cmal7"),
+            #("cmal7", "@cmal7"),
             ("bbu", "@bbu"),
             # ('bb6u','@bb6u'),
             # ('bb4u','@bb4u'),
