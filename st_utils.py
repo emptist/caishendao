@@ -19,9 +19,9 @@ def set_page_background_color(df):
         elif df.scall.iloc[-1]:
             bg_color = '#e63c5e'
         elif df.buy.iloc[-1]:
-            bg_color = '#fbec0d' #'#ffffff'
+            bg_color = '#f4edd5' #'#ffffff'
         elif df.sput.iloc[-1]: #| df.buy.iloc[-1]:
-            bg_color = '#fbec0d' #'#ffffff'
+            bg_color = '#f4edd5' #'#ffffff'
         else:
             bg_color = '#4713ea' #'#9ba9f4'
 
