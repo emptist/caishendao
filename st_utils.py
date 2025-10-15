@@ -19,11 +19,11 @@ def set_page_background_color(df):
         elif df.scall.iloc[-1]:
             bg_color = '#e63c5e'
         elif df.buy.iloc[-1]:
-            bg_color = '#ffffff'
+            bg_color = '#fbec0d' #'#ffffff'
         elif df.sput.iloc[-1]: #| df.buy.iloc[-1]:
-            bg_color = '#ffffff'
+            bg_color = '#fbec0d' #'#ffffff'
         else:
-            bg_color = '#9ba9f4'
+            bg_color = '#4713ea' #'#9ba9f4'
 
     except Exception as e:
         # 如果出现任何错误，使用默认背景色并打印错误信息
