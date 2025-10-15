@@ -523,13 +523,8 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
         # Create a container with background color to ensure readability
         analysis_container = st.container()
         with analysis_container:
-            # Use HTML styling to ensure proper background and text contrast
-            st.markdown(
-                f"""<div style='background-color: white; padding: 15px; border-radius: 5px; color: black;'>
-                {analysis}
-                </div>""",
-                unsafe_allow_html=True
-            )
+            # Use Streamlit's native markdown rendering with a container
+                st.markdown(analysis)
         
         # Store current analysis results in session state
         session_state.current_analysis = analysis
@@ -557,22 +552,12 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
                 for i, message in enumerate(session_state[chat_history_key]):
                     if message['role'] == 'user':
                         with st.chat_message("user"):
-                            # Use HTML styling for user messages with unique keys to prevent duplication
-                            st.markdown(
-                                f"""<div style='background-color: #f0f0f0; padding: 10px; border-radius: 5px; color: black;'>
-                                {message['content']}
-                                </div>""",
-                                unsafe_allow_html=True
-                            )
+                            # Use Streamlit's native markdown rendering for user messages
+                            st.markdown(message['content'])
                     else:
                         with st.chat_message("assistant"):
-                            # Use HTML styling for assistant messages with unique keys to prevent duplication
-                            st.markdown(
-                                f"""<div style='background-color: white; padding: 10px; border-radius: 5px; color: black;'>
-                                {message['content']}
-                                </div>""",
-                                unsafe_allow_html=True
-                            )
+                            # Use Streamlit's native markdown rendering for assistant messages
+                            st.markdown(message['content'])
             
         col_input, col_clear = st.columns([4, 1])
         with col_input:
@@ -607,5 +592,5 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
             
             ai_cache.save_chat_history_to_disk(symbol, user_question, ai_response, session_state)
             
-            # Remove st.rerun() to prevent the UI from refreshing and duplicating messages
-            # Streamlit will automatically handle updating the conversation display
+            # Use st.rerun() to immediately update the UI with the new messages
+            st.rerun()
