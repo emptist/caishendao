@@ -15,21 +15,21 @@ class UnsuitableAccountValueError(Exception):
 class ShortOnStockError(Exception):
     pass
 
-# 该class目前未检查到引用情形，保留代码以备不时之需
+# This class is currently not referenced but kept for future needs
 class EntryPointBug(Exception):
     pass
 
-# 该class目前未检查到引用情形，保留代码以备不时之需
+# This class is currently not referenced but kept for future needs
 class BuyBullEntryBug(Exception):
     pass
-# 该class目前未检查到引用情形，保留代码以备不时之需
+# This class is currently not referenced but kept for future needs
 class SellBullEntryBug(Exception):
     pass
 
-# 该class目前未检查到引用情形，保留代码以备不时之需
+# This class is currently not referenced but kept for future needs
 class BuyBearEntryBug(Exception):
     pass
-# 该class目前未检查到引用情形，保留代码以备不时之需
+# This class is currently not referenced but kept for future needs
 class SellBearEntryBug(Exception):
     pass
 

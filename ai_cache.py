@@ -8,54 +8,54 @@ from settings import MySetts
 
 # Ensure .ai_ana_records directory exists and has proper permissions
 def ensure_safe_directory(directory_path):
-    """确保目录存在并设置适当的权限(0o700)"""
+    """Ensure directory exists and set appropriate permissions (0o700)"""
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
-        # 设置目录权限为0o700 (只有所有者可读、写、执行)
+        # Set directory permissions to 0o700 (owner only read, write, execute)
         os.chmod(directory_path, stat.S_IRWXU)
     else:
-        # 检查并更新现有目录的权限
+        # Check and update permissions for existing directory
         current_mode = os.stat(directory_path).st_mode
         if (current_mode & 0o777) != stat.S_IRWXU:
             os.chmod(directory_path, stat.S_IRWXU)
 
 
 def check_cached_analysis_file(symbol, ai_provider, records_dir):
-    """检查是否存在符合缓存时间条件的文件"""
+    """Check if there are cached analysis files that meet time requirements"""
     try:
-        # 确保目录存在并具有适当的权限
+        # Ensure directory exists and has appropriate permissions
         ensure_safe_directory(records_dir)
-        # 获取缓存TTL
+        # Get cache TTL
         cache_ttl_seconds = MySetts.ai_analysis_cache_ttl_seconds
         current_time = datetime.datetime.now()
         
-        # 查找指定股票和AI提供商的所有分析记录(仅支持MD格式)
+        # Find all analysis records for the specified stock and AI provider (MD format only)
         all_files = list(records_dir.glob(f"{symbol}_{ai_provider}_*.md"))
         
         if not all_files:
             return None, None
         
-        # 按时间戳排序，最新的在前
+        # Sort by timestamp, newest first
         all_files.sort(key=lambda x: x.name, reverse=True)
         
-        # 检查文件是否在缓存时间内
+        # Check if file is within cache time
         for filepath in all_files:
             try:
-                # 从文件名提取时间戳
+                # Extract timestamp from filename
                 file_name = filepath.name
-                # 格式是: symbol_ai_provider_timestamp.md
-                # 提取出 timestamp 部分 (去掉扩展名)
-                base_name = file_name[:-3]  # 去掉.md扩展名
-                # 提取格式: symbol_ai_provider_20250913_213909
+                # Format is: symbol_ai_provider_timestamp.md
+                # Extract timestamp part (remove extension)
+                base_name = file_name[:-3]  # Remove .md extension
+                # Extract format: symbol_ai_provider_20250913_213909
                 parts = base_name.split('_')
                 if len(parts) >= 4:
-                    # 合并日期和时间部分: 20250913_213909
+                    # Combine date and time parts: 20250913_213909
                     timestamp_part = f"{parts[2]}_{parts[3]}"
                     try:
                         file_time = datetime.datetime.strptime(timestamp_part, "%Y%m%d_%H%M%S")
                         time_diff = (current_time - file_time).total_seconds()
                         
-                        # 检查是否在缓存时间范围内
+                        # Check if within cache time range
                         if time_diff <= cache_ttl_seconds:
                             session_id = base_name
                             return filepath, session_id
@@ -64,61 +64,61 @@ def check_cached_analysis_file(symbol, ai_provider, records_dir):
             except Exception as e:
                 continue
         
-        # 如果没有符合缓存时间的文件，返回None
+        # If no files match cache time requirements, return None
         return None, None
     except Exception as e:
         return None, None
 
 
 def load_cached_analysis(symbol, ai_provider, cache_ttl_seconds, records_dir):
-    """从本地加载符合缓存时间要求的AI分析结果"""
+    """Load AI analysis results from local cache that meet time requirements"""
     try:
-        # 确保目录存在并具有适当的权限
+        # Ensure directory exists and has appropriate permissions
         ensure_safe_directory(records_dir)
-        # 查找指定股票和AI提供商的所有分析记录(仅支持MD格式)
+        # Find all analysis records for the specified stock and AI provider (MD format only)
         all_files = list(records_dir.glob(f"{symbol}_{ai_provider}_*.md"))
         
         if not all_files:
             return None
         
-        # 按时间戳排序，最新的在前
+        # Sort by timestamp, newest first
         all_files.sort(key=lambda x: x.name, reverse=True)
         
-        # 检查最新的记录是否在缓存时间内
+        # Check if the newest record is within cache time
         current_time = datetime.datetime.now()
         
         for filepath in all_files:
             try:
-                # 从文件名中提取时间戳
+                # Extract timestamp from filename
                 file_name = filepath.name
-                # 格式是: symbol_ai_provider_timestamp.md
-                # 提取出 timestamp 部分 (去掉扩展名)
-                base_name = file_name[:-3]  # 去掉.md扩展名
-                # 提取格式: symbol_ai_provider_20250913_213909
+                # Format is: symbol_ai_provider_timestamp.md
+                # Extract timestamp part (remove extension)
+                base_name = file_name[:-3]  # Remove .md extension
+                # Extract format: symbol_ai_provider_20250913_213909
                 parts = base_name.split('_')
                 if len(parts) >= 4:
-                    # 合并日期和时间部分: 20250913_213909
+                    # Combine date and time parts: 20250913_213909
                     timestamp_part = f"{parts[2]}_{parts[3]}"
                     try:
-                        # 尝试解析文件名中的时间戳
+                        # Try to parse timestamp from filename
                         file_time = datetime.datetime.strptime(timestamp_part, "%Y%m%d_%H%M%S")
                     except ValueError:
-                        # 如果无法解析时间戳，则跳过此文件
+                        # If timestamp parsing fails, skip this file
                         continue
                 else:
                     continue
                 
-                # 检查是否在缓存时间内
+                # Check if within cache time
                 time_diff = (current_time - file_time).total_seconds()
                 
                 if time_diff <= cache_ttl_seconds:
-                    # 在缓存时间内，读取并返回分析结果
+                    # Within cache time, read and return analysis results
                     with open(filepath, 'r', encoding='utf-8') as f:
                         content = f.read()
-                    # 提取详细分析部分
-                    analysis_start = content.find("## 详细分析")
+                    # Extract detailed analysis section
+                    analysis_start = content.find("## Detailed Analysis")
                     if analysis_start != -1:
-                        analysis_end = content.find("## 对话历史", analysis_start)
+                        analysis_end = content.find("## Conversation History", analysis_start)
                         if analysis_end != -1:
                             analysis = content[analysis_start:analysis_end].strip()
                         else:
@@ -129,88 +129,88 @@ def load_cached_analysis(symbol, ai_provider, cache_ttl_seconds, records_dir):
             except Exception as e:
                 continue
         
-        # 如果没有符合条件的文件，返回None
+        # If no files meet criteria, return None
         return None
     except Exception as e:
         return None
 
 
 def save_analysis_to_disk(symbol, analysis, ai_provider, records_dir):
-    """将AI分析结果保存到本地磁盘(Markdown格式)"""
+    """Save AI analysis results to local disk (Markdown format)"""
     try:
-        # 确保目录存在并具有适当的权限
+        # Ensure directory exists and has appropriate permissions
         ensure_safe_directory(records_dir)
-        # 生成带时间戳的文件名和会话ID
+        # Generate timestamped filename and session ID
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         session_id = f"{symbol}_{ai_provider}_{timestamp}"
         filename = f"{session_id}.md"
         filepath = records_dir / filename
         
-        # 准备要保存的Markdown内容
+        # Prepare Markdown content to save
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        md_content = f"""# AI分析报告: {symbol}
+        md_content = f"""# AI Analysis Report: {symbol}
 
-## 基本信息
-- **股票代码**: {symbol}
-- **AI提供商**: {ai_provider}
-- **生成时间**: {now}
+## Basic Information
+- **Symbol**: {symbol}
+- **AI Provider**: {ai_provider}
+- **Generated Time**: {now}
 
-## 详细分析
+## Detailed Analysis
 
 {analysis}
 
 ---
 
-## 对话历史
+## Conversation History
 """
         
-        # 保存到Markdown文件
+        # Save to Markdown file
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(md_content)
             
         return session_id
     except Exception as e:
-        # 记录错误但不影响程序运行
-        st.error(f"保存AI分析到本地失败: {str(e)}")
+        # Log error without affecting program execution
+        st.error(f"Failed to save AI analysis locally: {str(e)}")
         return None
 
 
 def update_existing_analysis_file(filepath, symbol, analysis, ai_provider):
-    """更新现有分析文件内容，保留对话历史"""
+    """Update existing analysis file content while preserving conversation history"""
     try:
-        # 读取现有文件内容
+        # Read existing file content
         with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # 检查是否包含对话历史部分
-        chat_history_start = content.find("\n## 对话历史\n")
+        # Check if file contains conversation history section
+        chat_history_start = content.find("\n## Conversation History\n")
         chat_history = content[chat_history_start:] if chat_history_start != -1 else ""
         
-        # 创建新的文件内容（更新分析，保留对话历史）
+        # Create new file content (update analysis, preserve conversation history)
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        new_content = f"# AI分析报告: {symbol}\n"
-        new_content += "\n## 基本信息\n"
-        new_content += f"- **股票代码**: {symbol}\n"
-        new_content += f"- **AI提供商**: {ai_provider}\n"
-        new_content += f"- **生成时间**: {current_time}\n"
-        new_content += "\n## 详细分析\n\n"
+        new_content = f"# AI Analysis Report: {symbol}\n"
+        new_content += "\n## Basic Information\n"
+        new_content += f"- **Symbol**: {symbol}\n"
+        new_content += f"- **AI Provider**: {ai_provider}\n"
+        new_content += f"- **Generated Time**: {current_time}\n"
+        new_content += "\n## Detailed Analysis\n\n"
         new_content += f"{analysis}\n"
-        new_content += chat_history  # 添加原有的对话历史
+        new_content += chat_history  # Add original conversation history
         
-        # 写回文件
+        # Write back to file
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(new_content)
     except Exception as e:
-        st.error(f"更新分析文件失败: {str(e)}")
+        st.error(f"Failed to update analysis file: {str(e)}")
 
 
 def save_chat_history_to_disk(symbol, user_question, ai_response, session_state):
-    """将聊天历史保存到对应的Markdown分析文件中"""
+    """Save chat history to the corresponding Markdown analysis file"""
     try:
-        # 确保目录存在并具有适当的权限
+        # Ensure directory exists and has appropriate permissions
         records_dir = Path("./.ai_ana_records")
         ensure_safe_directory(records_dir)
-        # 获取当前会话ID
+        # Get current session ID
         if 'current_analysis_session_id' not in session_state or \
            symbol not in session_state.current_analysis_session_id:
             return
@@ -219,30 +219,40 @@ def save_chat_history_to_disk(symbol, user_question, ai_response, session_state)
         records_dir = Path("./.ai_ana_records")
         filepath = records_dir / f"{session_id}.md"
         
-        # 检查文件是否存在
+        # Check if file exists
         if not filepath.exists():
             return
             
-        # 读取现有内容
+        # Read existing content
         with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
             
-        # 获取当前时间
+        # Get current time
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # 添加新的对话历史
+        # Create new chat entry
         new_chat = f"""
-### 用户提问 ({now})
+### User Question ({now})
 {user_question}
 
-### AI回答
+### AI Answer
 {ai_response}
 """
         
-        # 保存更新后的内容
-        with open(filepath, 'a', encoding='utf-8') as f:
-            f.write(new_chat)
+        # Check if conversation history section already exists
+        if "## Conversation History" in content:
+            # Split content into analysis and conversation parts
+            analysis_part, history_part = content.split("## Conversation History")
+            # Update content with existing analysis + conversation marker + existing history + new chat
+            updated_content = analysis_part.strip() + "\n\n## Conversation History\n" + history_part.strip() + new_chat
+        else:
+            # No conversation history section yet, add it before appending new chat
+            updated_content = content.strip() + "\n\n## Conversation History" + new_chat
+        
+        # Write updated content back to file
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(updated_content)
             
     except Exception as e:
-        # 记录错误但不影响程序运行
-        st.warning(f"保存聊天历史到本地失败: {str(e)}")
+        # Log error without affecting program execution
+        st.warning(f"Failed to save chat history locally: {str(e)}")

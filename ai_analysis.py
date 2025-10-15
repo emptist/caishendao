@@ -300,13 +300,13 @@ def get_ai_analysis(symbol, info, ai_provider):
 
 def get_local_fallback_response(user_question, current_analysis_symbol, language='en'):
     """Generate unified local fallback response"""
-    # Default to English response
+    # Default to English response with consistent styling
     local_response = """
 ### Local Fallback Response
 Due to AI service limitations, here are some relevant insights and suggestions:
         """
     
-    if not user_question or user_question.strip().lower() in ['ok', 'ok, please', '好的', '好的，请', '继续', '请继续']:
+    if not user_question or user_question.strip().lower() in ['ok', 'ok, please']:
         local_response += "\nIt seems you're requesting to continue our analysis. Here are some additional insights about this stock/ETF:\n"
         local_response += "\n1. Price trend analysis: Reviewing recent price movements can help gauge short-term market sentiment\n"
         local_response += "2. Fundamental analysis: Examine financial health, industry position, and future growth prospects\n"
@@ -465,26 +465,35 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
                         analysis = content.split("## Conversation History")[0].strip()
                         
                         # Extract and restore conversation history
-                        chat_history_content = content.split("## Conversation History")[1].strip()
-                        if chat_history_content and chat_history_key not in session_state:
-                            # Initialize chat history
-                            session_state[chat_history_key] = []
-                            
-                            # Split user questions and AI answers
-                            import re
-                            # Pattern to match user questions and AI answers
-                            matches = re.findall(r'### User Question \(.*?\)\n(.*?)\n\n### AI Answer\n(.*?)(?=\n### User Question|$)', chat_history_content, re.DOTALL)
-                            
-                            # Add matched conversations to session state
-                            for user_question, ai_response in matches:
-                                session_state[chat_history_key].append({
-                                    'role': 'user',
-                                    'content': user_question.strip()
-                                })
-                                session_state[chat_history_key].append({
-                                    'role': 'assistant',
-                                    'content': ai_response.strip()
-                                })
+                        try:
+                            chat_history_content = content.split("## Conversation History")[1].strip()
+                            if chat_history_content:
+                                # Initialize chat history if it doesn't exist
+                                if chat_history_key not in session_state:
+                                    session_state[chat_history_key] = []
+                                else:
+                                    # Clear existing chat history to avoid duplicates
+                                    session_state[chat_history_key] = []
+                                
+                                # Split user questions and AI answers - improved regex pattern
+                                import re
+                                # More robust pattern to match user questions and AI answers
+                                matches = re.findall(r'### User Question \(.*?\)\n(.*?)\n\n### AI Answer\n(.*?)(?=\n### User Question|$)', chat_history_content, re.DOTALL)
+                                
+                                # Add matched conversations to session state
+                                if matches:
+                                    for user_question, ai_response in matches:
+                                        session_state[chat_history_key].append({
+                                            'role': 'user',
+                                            'content': user_question.strip()
+                                        })
+                                        session_state[chat_history_key].append({
+                                            'role': 'assistant',
+                                            'content': ai_response.strip()
+                                        })
+                        except Exception as e:
+                            # Log error but continue with analysis
+                            st.warning(f"Error restoring conversation history: {str(e)}")
                     else:
                         analysis = content.strip()
             except Exception as e:
@@ -511,7 +520,16 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
             model_info = "(qwen-turbo)"
             
         st.markdown(f"### AI-Powered Analysis{model_info}")
-        st.markdown(analysis)
+        # Create a container with background color to ensure readability
+        analysis_container = st.container()
+        with analysis_container:
+            # Use HTML styling to ensure proper background and text contrast
+            st.markdown(
+                f"""<div style='background-color: white; padding: 15px; border-radius: 5px; color: black;'>
+                {analysis}
+                </div>""",
+                unsafe_allow_html=True
+            )
         
         # Store current analysis results in session state
         session_state.current_analysis = analysis
@@ -532,14 +550,29 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
         if len(session_state[chat_history_key]) > MAX_CHAT_HISTORY:
             session_state[chat_history_key] = session_state[chat_history_key][-MAX_CHAT_HISTORY:]
         
+        # Display chat history without duplication
         if session_state[chat_history_key]:
-            for message in session_state[chat_history_key]:
-                if message['role'] == 'user':
-                    with st.chat_message("user"):
-                        st.markdown(message['content'])
-                else:
-                    with st.chat_message("assistant"):
-                        st.markdown(message['content'])
+            # Use a unique key for the chat container to prevent duplicate rendering
+            with st.container(key=f"chat_container_{symbol}"):
+                for i, message in enumerate(session_state[chat_history_key]):
+                    if message['role'] == 'user':
+                        with st.chat_message("user"):
+                            # Use HTML styling for user messages with unique keys to prevent duplication
+                            st.markdown(
+                                f"""<div style='background-color: #f0f0f0; padding: 10px; border-radius: 5px; color: black;'>
+                                {message['content']}
+                                </div>""",
+                                unsafe_allow_html=True
+                            )
+                    else:
+                        with st.chat_message("assistant"):
+                            # Use HTML styling for assistant messages with unique keys to prevent duplication
+                            st.markdown(
+                                f"""<div style='background-color: white; padding: 10px; border-radius: 5px; color: black;'>
+                                {message['content']}
+                                </div>""",
+                                unsafe_allow_html=True
+                            )
             
         col_input, col_clear = st.columns([4, 1])
         with col_input:
@@ -568,6 +601,11 @@ def show_ai_analysis(symbol, info, ai_analysis, ai_provider, session_state):
                 'content': ai_response
             })
             
+            # No need to directly display the new assistant response here
+            # as it will be shown in the main chat history loop above
+            # This prevents duplicate messages
+            
             ai_cache.save_chat_history_to_disk(symbol, user_question, ai_response, session_state)
             
-            st.rerun()
+            # Remove st.rerun() to prevent the UI from refreshing and duplicating messages
+            # Streamlit will automatically handle updating the conversation display

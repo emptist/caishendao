@@ -31,7 +31,7 @@ st.sidebar.header('Bulls Detector')
 #     spinner_text = st.text('')
 
 
-# bull_table应用专用配置
+# Bull Table application specific configuration
 class BullTableSettings:
     #stock_types = ['Indices','Gists','Bios','Simple','Favors','NS100','Top_SP','SP500','Pairs','Rally']
     stock_types = ['Indices','Bios','Gists','Simple']

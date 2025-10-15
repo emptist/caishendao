@@ -4,16 +4,16 @@
 import warnings
 from settings import MySetts
 
-# 输入验证函数，防止路径遍历攻击
+# Input validation function to prevent path traversal attacks
 def validate_user_input(input_str, allowed_chars=None):
-    """验证用户输入，防止路径遍历和其他注入攻击
+    """Validate user input to prevent path traversal and other injection attacks
     
     Args:
-        input_str: 用户输入的字符串
-        allowed_chars: 允许的字符集（正则表达式格式）
-        
+        input_str: User input string
+        allowed_chars: Allowed character set (regex format)
+    
     Returns:
-        清理后的安全字符串，或在验证失败时返回None
+        Sanitized safe string, or None if validation fails
     """
     if not input_str or not isinstance(input_str, str):
         return None
@@ -21,20 +21,20 @@ def validate_user_input(input_str, allowed_chars=None):
     return input_str.strip()
 
     # the following are pure nonsense
-    # 检查是否包含路径遍历字符
+    # Check for path traversal characters
     if any(ch in input_str for ch in ['../', '..\\', '/..', '\\..']):
         return None
     
-    # 检查是否包含绝对路径字符
+    # Check for absolute path characters
     if any(input_str.startswith(prefix) for prefix in ['/', '\\', 'C:', 'D:']):
         return None
     
-    # 检查是否包含控制字符
+    # Check for control characters
     for char in input_str:
         if ord(char) < 32 and char not in ['\t', '\n']:
             return None
     
-    # 如果提供了允许的字符集，则进行更严格的验证
+    # If allowed character set is provided, perform stricter validation
     if allowed_chars:
         import re
         if not re.match(allowed_chars, input_str):
@@ -682,7 +682,7 @@ class StockGroup:
             if symbols is None:
                 symbols = self.stockdata_dict.keys()
         
-        # 为股票代码定义允许的字符集（只允许字母、数字、点和连字符and ^）
+        # Define allowed character set for stock symbols (only letters, numbers, dots, hyphens and ^)
         symbol_pattern = r'^[a-zA-Z0-9.-^]+$'
 
         for interval in self.all_intervals:
@@ -701,10 +701,10 @@ class StockGroup:
             else:
                 column_names = dfs.columns.levels[0]
             for symbol in symbols:
-                # 验证股票代码，防止路径遍历攻击
+                # Validate stock symbols to prevent path traversal attacks
                 validated_symbol = validate_user_input(symbol, symbol_pattern)
                 if validated_symbol is None or validated_symbol != symbol:
-                    print(f"警告: 忽略无效或潜在危险的股票代码 '{symbol}'")
+                    print(f"Warning: Ignoring invalid or potentially dangerous stock symbol '{symbol}'")
                     continue
                 
                 if symbol in column_names:
@@ -734,7 +734,7 @@ class StockGroup:
     
     def set_info(self, tickers):
         self.info = {}
-        # 检查tickers是否为可迭代对象
+        # Check if tickers is iterable
         if not hasattr(tickers, 'items'):
             print(f"Warning: tickers object doesn't have 'items' method")
             return
@@ -743,11 +743,11 @@ class StockGroup:
             try:
                 self.info[key] = value.info
             except AttributeError as e:
-                # 只捕获AttributeError，更有针对性
+                # Only catch AttributeError for more targeted exception handling
                 print(f'*** debug {key} error: {e}. Object attributes: {dir(value)}')
                 self.info[key] = {}
             except Exception as e:
-                # 记录其他意外异常
+                # Log other unexpected exceptions
                 print(f'*** debug {key} unexpected error: {type(e).__name__}: {e}')
                 self.info[key] = {}
 

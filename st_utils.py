@@ -26,11 +26,11 @@ def set_page_background_color(df):
             bg_color = '#4713ea' #'#9ba9f4'
 
     except Exception as e:
-        # 如果出现任何错误，使用默认背景色并打印错误信息
-        print(f"设置背景色时出错: {e}")
+        # If any error occurs, use the default background color and print the error message
+        print(f"Error setting background color: {e}")
         bg_color = '#9ba9f4'
     
-    # 使用CSS设置页面背景
+    # Using CSS to set page background
     st.markdown(
         f"""<style>
             .main {{ background-color: {bg_color}; }}
@@ -41,13 +41,13 @@ def set_page_background_color(df):
 
 
 def set_custom_background_color(color):
-    """设置自定义页面背景颜色
+    """Set custom page background color
     
     Args:
-        color: CSS颜色代码，例如 '#ffffff' 或 'white'
+        color: CSS color code, e.g. '#ffffff' or 'white'
     """
     try:
-        # 使用CSS设置页面背景
+        # Using CSS to set page background
         st.markdown(
             f"""<style>
                 .main {{ background-color: {color}; }}
@@ -56,7 +56,7 @@ def set_custom_background_color(color):
             unsafe_allow_html=True
         )
     except Exception as e:
-        print(f"设置自定义背景色时出错: {e}")
+            print(f"Error setting custom background color: {e}")
 
 
 
