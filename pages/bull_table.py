@@ -178,7 +178,7 @@ def build_page():
     # Initialize or get the selected symbol from session state
     # # Ensure the selected symbol is still in the current list
     # the if condition is added by jules suggestion, remove if anything unsucessful
-    if True: #'selected_symbol' not in st.session_state or st.session_state.selected_symbol not in symbol_list:
+    if 'selected_symbol' not in st.session_state or st.session_state.selected_symbol not in symbol_list:
         st.session_state.selected_symbol = symbol_list[0] if symbol_list else None
 
         # added by jules suggestion, remove if anything unsucessful
