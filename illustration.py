@@ -53,7 +53,7 @@ def bokeh_draw(
         - whole_view: without second chart(kdj, etc.) in log y_axis_type
     """
     if just_data:
-        # eb,es ='sput','scall'
+        # eb,es ='bcall','bput'
         eb, es = "buy", "sell"
     else:
         eb, es = "eb", "es"
@@ -152,8 +152,8 @@ def bokeh_draw(
     
     # Disable background fill for now to have a clean look since streamlit apps have there own page color 
     last_ma_bullish = df.avrgs_bull.iloc[-1]
-    if last_ma_bullish and df.sput.iloc[-1]:
-        # if df.sput.iloc[-1]:
+    if last_ma_bullish and df.bcall.iloc[-1]:
+        # if df.bcall.iloc[-1]:
         p.background_fill_color = "#f2693d"  #'#f7dcd2' #'#f39726' #'#e2dafc' #'#d3c7f8'
         p.background_fill_alpha = 0.2
 
@@ -283,17 +283,17 @@ def bokeh_draw(
 
     mark_k = True
     if mark_k:
-        # sput/scall sigs
+        # bcall/bput sigs
         if just_data:
             p.scatter(
-                df.idx[df["sput"]],
-                df.low[df["sput"]] * klsig,
+                df.idx[df["bcall"]],
+                df.low[df["bcall"]] * klsig,
                 line_color="red",
                 line_width=wopt,
             )
             p.scatter(
-                df.idx[df["scall"]],
-                df.high[df["scall"]] * khsig,
+                df.idx[df["bput"]],
+                df.high[df["bput"]] * khsig,
                 line_color="green",
                 line_width=wopt,
             )
@@ -385,15 +385,15 @@ def bokeh_draw(
             # on kdj
             if just_data:  # False and
                 p.scatter(
-                    df.idx[df["sput"]],
-                    df.m[df["sput"]] * klsig * klsig,
+                    df.idx[df["bcall"]],
+                    df.m[df["bcall"]] * klsig * klsig,
                     line_color="red",
                     line_width=wopt,
                     y_range_name="y2",
                 )
                 p.scatter(
-                    df.idx[df["scall"]],
-                    df.d[df["scall"]] * khsig * khsig,
+                    df.idx[df["bput"]],
+                    df.d[df["bput"]] * khsig * khsig,
                     line_color="green",
                     line_width=wopt,
                     y_range_name="y2",
@@ -451,13 +451,13 @@ def bokeh_draw(
             # ('bbp','@bbp'),
             ("buy", "@buy"),
             ("sell", "@sell"),
-            ("sput", "@sput"),
-            ("scall", "@scall"),
+            ("bcall", "@bcall"),
+            ("bput", "@bput"),
         ],
         formatters={
             "@date": "datetime",
             #'@buy':'boolean',
-            #'@sput': 'boolean',
+            #'@bcall': 'boolean',
         },
         mode="mouse",
     )
@@ -467,16 +467,16 @@ def bokeh_draw(
         l_text = f'{symbol}: Sell'
         l_text_color = 'red'
         l_text_y_offset = -20
-    elif df.scall.iloc[-1]:
-        l_text = f'{symbol}: Dismiss Call'
+    elif df.bput.iloc[-1]:
+        l_text = f'{symbol}: Buy Put'
         l_text_color = 'red'
         l_text_y_offset = -20
     elif df.buy.iloc[-1]: 
         l_text = f'{symbol}: Buy'
         l_text_color = 'blue'
         l_text_y_offset = -20
-    elif df.sput.iloc[-1]:
-        l_text = f'{symbol}: Dismiss Put'
+    elif df.bcall.iloc[-1]:
+        l_text = f'{symbol}: Buy Call'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:

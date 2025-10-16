@@ -847,12 +847,12 @@ def set_opt_entries(df,interval):
     # NOTE: only k >= d and low <= sma7 or first 2 bars that low > sma7 are marked True
     # count bars that k > d and low > sma 
     bars_k_on_d =series_bars_since((df.k > df.d) & (df.low > df.sma7))
-    df['sput'] = df.avrgs_bull & (df.k >= df.d) & (bars_k_on_d < 3) #& low_d
+    df['bcall'] = df.avrgs_bull & (df.k >= df.d) & (bars_k_on_d < 3) #& low_d
 
     # NOTE: only k < d and high > sma7 or first 2 bars that high < sma7 are marked True
     # count bars that k < d and high < sma 
     bars_d_on_k =series_bars_since((df.k < df.d) & (df.high < df.sma7))
-    df['scall'] = ~df.avrgs_bull & (df.j < df.d) & (bars_d_on_k < 3) #& high_d
+    df['bput'] = ~df.avrgs_bull & (df.j < df.d) & (bars_d_on_k < 3) #& high_d
 
     
 
@@ -864,8 +864,8 @@ def set_etf_entries(df,interval):
         filter option entries to get etf entries
         more stict than conditions for buy/sell options
     '''
-    df['buy'] = df.sput & ((df.open <= df.bbu)|(df.close <= df.bbu))
-    df['sell'] = df.scall & ((df.open >= df.bbl)|(df.close >= df.bbl))
+    df['buy'] = df.bcall & ((df.open <= df.bbu)|(df.close <= df.bbu))
+    df['sell'] = df.bput & ((df.open >= df.bbl)|(df.close >= df.bbl))
     
     df['watch'] = (df.j.shift(1) < 8) & (df.j > df.j.shift(1)) & (df.close > df.bbm) & (df.bbm > df.bbm.shift(1))
     both_equal = cma_sma_equal(df,interval)

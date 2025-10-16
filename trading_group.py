@@ -86,8 +86,8 @@ class Quote:
                     return equal & (df.lrows7.iloc[-1] == 0)
                 case 'buy':
                     return equal & df.buy.iloc[-1]
-                case 'sput':
-                    return equal & df.sput.iloc[-1]
+                case 'bcall':
+                    return equal & df.bcall.iloc[-1]
                 case 'All':
                     return equal
                 case 'Potential':
@@ -101,8 +101,8 @@ class Quote:
                     return df.watch.iloc[-1]
                 case 'sell':
                     return df.sell.iloc[-1]
-                case 'scall':
-                    return df.scall.iloc[-1]
+                case 'bput':
+                    return df.bput.iloc[-1]
                 case 'maGood':
                     return df.avrgs_bull.iloc[-1]
                 case 'JonD':
@@ -136,8 +136,8 @@ class Quote:
     def avrgs_bull(self):
         return self.df_predict().df.avrgs_bull.iloc[-1]
 
-    def sput(self):
-        return self.df_predict().df.sput.iloc[-1]
+    def bcall(self):
+        return self.df_predict().df.bcall.iloc[-1]
 
     def buy(self):
         return self.df_predict().df.buy.iloc[-1]
@@ -413,10 +413,10 @@ class StockGroup:
         
         def detecting(q:Quote,symbol=''):
             bull_starts = q.bias_not_high() 
-            return bull_starts and q.buy()
-            # no more detects needed since we directly detect buy or sput
+            #return bull_starts and q.buy()
+            # no more detects needed since we directly detect buy or bcall
             #bull_starts = q.bias_not_high() and (q.high_cnstvelo() or q.high_cnst())
-            #return bull_starts and (q.buy() or q.sput())
+            return bull_starts and (q.buy() or q.bcall())
             
         g.find_potential_target(detecting=detecting,srt=None)
     
@@ -544,7 +544,7 @@ class StockGroup:
         """
             def detecting(q,symbol=''):
                 return q.avrgs_bull() 
-                #return q.sput() 
+                #return q.bcall() 
             def srt(e):
                 return e.sort_by_interval_percent() 
                 #return e.decrease_by_percent()
