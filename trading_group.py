@@ -218,7 +218,7 @@ class Quote:
         return velo
     
 
-    def bias_not_high(self, limit=0.7):
+    def bias_not_high(self, limit=1):
         """
         limit: 0.7 means 0.70% to interval '1d', will be adjusted to other intervals
         """
