@@ -22,6 +22,8 @@ def set_page_background_color(df):
             bg_color = '#f4edd5' #'#ffffff'
         elif df.bcall.iloc[-1]: #| df.buy.iloc[-1]:
             bg_color = '#f4edd5' #'#ffffff'
+        elif df.avrgs_bull.iloc[-1]:
+            bg_color = '#f48830'
         else:
             bg_color = '#4713ea' #'#9ba9f4'
 
