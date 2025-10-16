@@ -320,7 +320,7 @@ def extra_calcs(data,sma_name,interval):
     label = (sma_name if (sma_name == 'bbm') else sma_name[3:])
     data[f'hsf{label}'] = data[sma_name].cummax()
     data[f'hprd{label}'] = (data[sma_name] == data[f'hsf{label}']).cumsum()
-    #data[f'hrows{label}'] = data.groupby(f'hprd{label}').cumcount()
+    data[f'hrows{label}'] = data.groupby(f'hprd{label}').cumcount()
 
     # use original lowest here
     data[f'lsf{label}'] = data[sma_name].cummin()
