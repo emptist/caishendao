@@ -390,7 +390,7 @@ class StockGroup:
 
     # except for ETNs, so we use ' ETN'
     @classmethod
-    def bull_starting(cls,symbols,init_interval='1d',sort_by_interval='1d',all_intervals=['1d'],pe_limit=None,top_n=None,ignoreds={'FNGU'},due_symbols={},name_except=' ETN'):
+    def bull_starting(cls,symbols,init_interval='1d',sort_by_interval='1d',all_intervals=['1d'],pe_limit=None,top_n=None,ignoreds={'FNGU','BOXX'},due_symbols={},name_except=' ETN'):
         symbols=symbols.union(due_symbols)
         symbols = cls.include_symbols(symbols,ignoreds)
         g = cls.trade_group(
@@ -426,7 +426,6 @@ class StockGroup:
 
         #x = -2
         #g.find_potential_target(detecting=detecting,srt=None,key_interval=g.all_intervals[x])
-
         def srt(e:StockData):
             return e.sort_by_interval_cnstvelo()
             #return e.sort_by_interval_percent()
@@ -843,6 +842,7 @@ class StockGroup:
 
     def sort_potentials(self,srt,reverse=True):
         if len(self.potential_dict.keys()) > 0:
+            #if ordered: <- CAN'T do this, it will break the system. Nothing will be selected out
             self.potentials = list(self.potential_dict.values())
             self.potentials.sort(reverse=reverse,key=srt)
             self.potential_symbols = [stk_dt.symbol for stk_dt in self.potentials]
