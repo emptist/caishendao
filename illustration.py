@@ -462,33 +462,33 @@ def bokeh_draw(
         mode="mouse",
     )
     p.add_tools(hover)
-
+    ipyh = " 純陽" if df.hrows7.iloc[-1]==0 else ""
     if df.sell.iloc[-1]: 
-        l_text = f'{symbol}: Sell'
+        l_text = f'{symbol}: Sell{ipyh}'
         l_text_color = 'red'
         l_text_y_offset = -20
     elif df.bput.iloc[-1]:
-        l_text = f'{symbol}: Buy Put'
+        l_text = f'{symbol}: Buy Put{ipyh}'
         l_text_color = 'red'
         l_text_y_offset = -20
     elif df.buy.iloc[-1]: 
-        l_text = f'{symbol}:Buy{" 純陽" if df.hrows7.iloc[-1]==0 else ""}'
+        l_text = f'{symbol}:Buy{ipyh}'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif df.bcall.iloc[-1]:
-        l_text = f'{symbol}: Buy Call{" 純陽" if df.hrows7.iloc[-1]==0 else ""}'
+        l_text = f'{symbol}: Buy Call{ipyh}'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:
-        l_text = f'{symbol}: Trending Up{" 純陽" if df.hrows7.iloc[-1]==0 else ""}'
+        l_text = f'{symbol}: Trending Up{ipyh}'
         l_text_color = 'magenta'
-        l_text_y_offset = -10
+        l_text_y_offset = -20
     elif df.avrgs_bear.iloc[-1]:
-        l_text = f'{symbol}: Trending Down'
+        l_text = f'{symbol}: Trending Down{ipyh}'
         l_text_color = 'green'
         l_text_y_offset = -10
     else:
-        l_text = f'{symbol}: Dubious'
+        l_text = f'{symbol}: Dubious{ipyh}'
         l_text_color = 'gray'
         l_text_y_offset = -10
     
