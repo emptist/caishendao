@@ -852,7 +852,11 @@ def set_opt_entries(df,interval):
     # NOTE: only k < d and high > sma7 or first 2 bars that high < sma7 are marked True
     # count bars that k < d and high < sma 
     bars_d_on_k =series_bars_since((df.k < df.d) & (df.high < df.sma7))
-    df['bput'] = ~df.avrgs_bull & (df.j < df.d) & (bars_d_on_k < 3) #& high_d
+    #df['bput'] = ~df.avrgs_bull & (df.j < df.d) & (bars_d_on_k < 3) #& high_d
+    df['bput'] = df.avrgs_bear & (df.j < df.d) & (bars_d_on_k < 3) #& high_d
+
+
+
 
     
 
