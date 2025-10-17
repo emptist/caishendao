@@ -462,7 +462,7 @@ def bokeh_draw(
         mode="mouse",
     )
     p.add_tools(hover)
-    ipyh = "䷀" if df.hrows7.iloc[-1]==0 else ""
+    ipyh = "☰" if df.hrows7.iloc[-1]==0 else ""
     if df.sell.iloc[-1]: 
         l_text = f'{symbol}: Sell{ipyh}'
         l_text_color = 'red'
