@@ -502,7 +502,7 @@ def bokeh_draw(
         # most important font family
         text_font= 'courier', #'sans-serif',
         text_font_size='28pt',
-        text_font_style='bold italic',
+        text_font_style='bold',
         text_color=l_text_color,
         #border_line_color='#c3c99a',
         background_fill_color='white',
