@@ -480,11 +480,11 @@ def bokeh_draw(
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:
-        l_text = f'{symbol}: Trending Up{ipyh}'
+        l_text = f'{symbol}: Going Up{ipyh}'
         l_text_color = 'magenta'
         l_text_y_offset = -20
     elif df.avrgs_bear.iloc[-1]:
-        l_text = f'{symbol}: Trending Down{ipyh}'
+        l_text = f'{symbol}: Going Down{ipyh}'
         l_text_color = 'green'
         l_text_y_offset = -10
     else:
