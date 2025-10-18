@@ -47,8 +47,8 @@ with col1:
     # Add AI Provider selection
     ai_provider = st.selectbox('AI Provider',  ['alibabacloud','gemini', ] if MySetts.use_proxy else ['gemini','alibabacloud'])
 with col6:
-    symbol = st.session_state.get('selected_symbol','SHLD')
-    symbol = 'SHLD' if symbol.isspace() or symbol == '' else symbol
+    symbol = st.session_state.get('selected_symbol','QQQ')
+    symbol = 'QQQ' if symbol.isspace() or symbol == '' else symbol
     selected_stock = st.text_input('Symbol',symbol).upper()
 
 @st.cache_data(ttl=60*10) # Cache the data for 10 minutes
