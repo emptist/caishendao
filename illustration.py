@@ -464,31 +464,31 @@ def bokeh_draw(
     p.add_tools(hover)
     ipyh = "☰" if df.hrows7.iloc[-1]==0 else ""
     if df.sell.iloc[-1]: 
-        l_text = f'{symbol}: Sell{ipyh}'
+        l_text = f'{symbol}: Sell {ipyh}'
         l_text_color = 'red'
         l_text_y_offset = -20
     elif df.bput.iloc[-1]:
-        l_text = f'{symbol}: Buy Put{ipyh}'
+        l_text = f'{symbol}: Buy Put {ipyh}'
         l_text_color = 'red'
         l_text_y_offset = -20
     elif df.buy.iloc[-1]: 
-        l_text = f'{symbol}:Buy{ipyh}'
+        l_text = f'{symbol}:Buy {ipyh}'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif df.bcall.iloc[-1]:
-        l_text = f'{symbol}: Buy Call{ipyh}'
+        l_text = f'{symbol}: Buy Call {ipyh}'
         l_text_color = 'blue'
         l_text_y_offset = -20
     elif last_ma_bullish:
-        l_text = f'{symbol}: Going Up{ipyh}'
+        l_text = f'{symbol}: Going Up {ipyh}'
         l_text_color = 'magenta'
         l_text_y_offset = -20
     elif df.avrgs_bear.iloc[-1]:
-        l_text = f'{symbol}: Going Down{ipyh}'
+        l_text = f'{symbol}: Going Down {ipyh}'
         l_text_color = 'green'
         l_text_y_offset = -10
     else:
-        l_text = f'{symbol}: Dubious{ipyh}'
+        l_text = f'{symbol}: Dubious {ipyh}'
         l_text_color = 'gray'
         l_text_y_offset = -10
     
